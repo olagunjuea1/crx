@@ -1,6 +1,6 @@
 <?php 
   include 'inc_functions.php';
-  $userid = $_SESSION['userid'];
+  // $userid = $_SESSION['userid'];
   
   function fetchdataall($conn, $tbl, $data) {
       $qry = mysqli_query($conn, "SELECT * FROM `$tbl`");

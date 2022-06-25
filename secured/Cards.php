@@ -28,64 +28,49 @@
         <div class="container-fluid">
           <div class="row justify-content-center">
             <div class="col-12">
-              <div class="row align-items-center mb-2">
-                <div class="col">
-                  <h2 class="h5 page-title">Hello Welcome back,</h2>
-                  <p>James Eric</p>
-                </div>
-                <div class="col-auto">
-                  <form class="form-inline">
-                    <div class="form-group d-none d-lg-inline">
-                      <label for="reportrange" class="sr-only">Date Ranges</label>
-                      <div id="reportrange" class="px-2 py-2 text-muted">
-                        <span class="small"></span>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <button type="button" class="btn btn-sm"><span class="fe fe-refresh-ccw fe-16 text-muted"></span></button>
-                      <button type="button" class="btn btn-sm mr-2"><span class="fe fe-filter fe-16 text-muted"></span></button>
-                    </div>
-                  </form>
-                </div>
-              </div>
+              <!-- header -->
+              <?php include"layout/header.php"; ?>
+              <!-- header ends here -->
 
               <div class="row align-items-center mb-4">
                 <div class="col">
-                  <h2 class="h5 page-title">Request</h2>
+                  <h2 class="h3 page-title">Bank account *8826</h2>
                 </div>
               </div> <!-- .row -->
 
               <div class="row align-items-center justify-content-between">  
                 <div class="col-md-5 py-5 wow zoomIn">
                     <div class="img-fluid text-center">
-                      <img src="assets/images/banner_image_1.svg" alt="">
+                      <img src="assets/images/banner_image_2.svg" alt="">
                     </div>
                   </div>              
                 <div class="col-md-6 py-5 wow fadeInLeft">
-                  <div class="card-deck">
-                    <div class="card shadow mb-4">
-                      <div class="card-header">
-                        <strong class="card-title">Request Payment</strong>
-                      </div>
-                      <div class="card-body">
-                        <form>
-                          <div class="form-group">
-                            <label for="inputEmail4">User#ID</label>
-                            <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                    <div class="card shadow eq-card mb-4">
+                        <div class="card-body mb-n3">
+                          <div class="row align-items-center h-100">
+                            <div class="col-md-6 my-3">
+                              <p class="mb-0"><strong class="mb-0 text-uppercase text-muted">Balance</strong></p>
+                              <h3>$2,562</h3>
+                              <p class="small text-muted mb-0"><span>Check and manage your account balance</span></p>
+                            </div>
+                            <div class="col-md-6 my-4 text-center">
+                              <div lass="chart-box mx-4">
+                                <div id="radialbarWidget"></div>
+                              </div>
+                            </div>
+                            <div class="col-md-6 border-top py-3">
+                              <p class="mb-1"><strong class="text-muted">Credit</strong></p>
+                              <h4 class="mb-0">$108</h4>
+                              <p class="small text-muted mb-0"><span>37.7% Last week</span></p>
+                            </div> <!-- .col -->
+                            <div class="col-md-6 border-top py-3">
+                              <p class="mb-1"><strong class="text-muted">Debit</strong></p>
+                              <h4 class="mb-0">$1168</h4>
+                              <p class="small text-muted mb-0"><span>-18.9% Last week</span></p>
+                            </div> <!-- .col -->
                           </div>
-                          <div class="form-group">
-                            <label for="inputPassword4">Amount</label>
-                            <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
-                          </div>
-                          <div class="form-group">
-                            <label for="inputAddress">Note</label>
-                            <textarea name="" id="" class="form-control"></textarea>
-                          </div>
-                          <button type="submit" class="btn btn-primary">Request Payment</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
+                        </div> <!-- .card-body -->
+                    </div> <!-- .card -->
                 </div>               
               </div>
 
@@ -94,8 +79,7 @@
                 <div class="col-md-12">
                   <div class="card shadow eq-card">
                     <div class="card-header">
-                      <strong class="card-title">Request History</strong>
-                      <a class="float-right small text-muted" href="#!">View all</a>
+                      <strong class="card-title">Transactions</strong>
                     </div>
                     <div class="card-body">
                       <table class="table table-hover table-borderless table-striped mt-n3 mb-n1">
@@ -117,36 +101,6 @@
                             <td><span class="dot dot-lg bg-warning mr-2"></span></td>
                           </tr>
                           <tr>
-                            <td>3218</td>
-                            <th scope="col">Graham Price</th>
-                            <td>Nunc Lectus Incorporated<br /><span class="small text-muted">Ap #705-5389 Id St.</span></td>
-                            <td>May 23, 2020</td>
-                            <td><span class="dot dot-lg bg-success mr-2"></span></td>
-                          </tr>
-                          <tr>
-                            <td>2651</td>
-                            <th scope="col">Reuben Orr</th>
-                            <td>Nisi Aenean Eget Limited<br />
-                              <span class="small text-muted">7425 Malesuada Rd.</span></td>
-                            <td>Nov 4, 2019</td>
-                            <td><span class="dot dot-lg bg-warning mr-2"></span></td>
-                          </tr>
-                          <tr>
-                            <td>2636</td>
-                            <th scope="col">Akeem Holder</th>
-                            <td>Pellentesque Associates<br />
-                              <span class="small text-muted">896 Sodales St.</span></td>
-                            <td>Mar 27, 2020</td>
-                            <td><span class="dot dot-lg bg-danger mr-2"></span></td>
-                          </tr>
-                          <tr>
-                            <td>2757</td>
-                            <th scope="col">Beau Barrera</th>
-                            <td>Augue Incorporated<br />
-                              <span class="small text-muted">4583 Id St.</span></td>
-                            <td>Jan 13, 2020</td>
-                            <td><span class="dot dot-lg bg-success mr-2"></span></td>
-                          </tr>
                         </tbody>
                       </table>
                     </div> <!-- .card-body -->

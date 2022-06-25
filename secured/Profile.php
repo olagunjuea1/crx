@@ -28,75 +28,92 @@
         <div class="container-fluid">
           <div class="row justify-content-center">
             <div class="col-12">
-              <div class="row align-items-center mb-2">
-                <div class="col">
-                  <h2 class="h5 page-title">Hello Welcome back,</h2>
-                  <p>James Eric</p>
-                </div>
-                <div class="col-auto">
-                  <form class="form-inline">
-                    <div class="form-group d-none d-lg-inline">
-                      <label for="reportrange" class="sr-only">Date Ranges</label>
-                      <div id="reportrange" class="px-2 py-2 text-muted">
-                        <span class="small"></span>
-                      </div>
+              <!-- header -->
+              <?php include"layout/header.php"; ?>
+              <!-- header ends here -->
+              <div class="my-4">
+                <div id="lineChart"></div>
+              </div><!-- .row -->
+              <!-- widgets -->
+              <div class="row my-4">
+                <div class="col-md-4">
+                  <div class="card shadow mb-4">
+                    <div class="card-body">
+                      <div class="row align-items-center">
+                        <div class="col">
+                          <small class="text-muted mb-1">Page Views</small>
+                          <h3 class="card-title mb-0">1168</h3>
+                          <p class="small text-muted mb-0"><span class="fe fe-arrow-down fe-12 text-danger"></span><span>-18.9% Last week</span></p>
+                        </div>
+                        <div class="col-4 text-right">
+                          <span class="sparkline inlineline"></span>
+                        </div>
+                      </div> <!-- /. row -->
+                    </div> <!-- /. card-body -->
+                  </div> <!-- /. card -->
+                </div> <!-- /. col -->
+                <div class="col-md-4">
+                  <div class="card shadow mb-4">
+                    <div class="card-body">
+                      <div class="row align-items-center">
+                        <div class="col">
+                          <small class="text-muted mb-1">Conversion</small>
+                          <h3 class="card-title mb-0">68</h3>
+                          <p class="small text-muted mb-0"><span class="fe fe-arrow-up fe-12 text-warning"></span><span>+1.9% Last week</span></p>
+                        </div>
+                        <div class="col-4 text-right">
+                          <span class="sparkline inlinepie"></span>
+                        </div>
+                      </div> <!-- /. row -->
+                    </div> <!-- /. card-body -->
+                  </div> <!-- /. card -->
+                </div> <!-- /. col -->
+                <div class="col-md-4">
+                  <div class="card shadow mb-4">
+                    <div class="card-body">
+                      <div class="row align-items-center">
+                        <div class="col">
+                          <small class="text-muted mb-1">Visitors</small>
+                          <h3 class="card-title mb-0">108</h3>
+                          <p class="small text-muted mb-0"><span class="fe fe-arrow-up fe-12 text-success"></span><span>37.7% Last week</span></p>
+                        </div>
+                        <div class="col-4 text-right">
+                          <span class="sparkline inlinebar"></span>
+                        </div>
+                      </div> <!-- /. row -->
+                    </div> <!-- /. card-body -->
+                  </div> <!-- /. card -->
+                </div> <!-- /. col -->
+              </div> <!-- end section -->
+              <div class="row my-4">
+                <div class="col-md-6 mb-4">
+                  <div class="card shadow">
+                    <div class="card-header">
+                      <strong class="card-title mb-0">Pie Chart</strong>
                     </div>
-                    <div class="form-group">
-                      <button type="button" class="btn btn-sm"><span class="fe fe-refresh-ccw fe-16 text-muted"></span></button>
-                      <button type="button" class="btn btn-sm mr-2"><span class="fe fe-filter fe-16 text-muted"></span></button>
+                    <div class="card-body">
+                      <canvas id="pieChartjs" width="400" height="300"></canvas>
+                    </div> <!-- /.card-body -->
+                  </div> <!-- /.card -->
+                </div> <!-- /. col -->
+                <div class="col-md-6 mb-4">
+                  <div class="card shadow">
+                    <div class="card-header">
+                      <strong class="card-title mb-0">Area Chart</strong>
                     </div>
-                  </form>
-                </div>
-              </div>
-
-              <div class="row align-items-center mb-4">
-                <div class="col">
-                  <h2 class="h3 page-title">Bank account *8826</h2>
-                </div>
-              </div> <!-- .row -->
-
-              <div class="row align-items-center justify-content-between">  
-                <div class="col-md-5 py-5 wow zoomIn">
-                    <div class="img-fluid text-center">
-                      <img src="assets/images/banner_image_2.svg" alt="">
-                    </div>
-                  </div>              
-                <div class="col-md-6 py-5 wow fadeInLeft">
-                    <div class="card shadow eq-card mb-4">
-                        <div class="card-body mb-n3">
-                          <div class="row align-items-center h-100">
-                            <div class="col-md-6 my-3">
-                              <p class="mb-0"><strong class="mb-0 text-uppercase text-muted">Balance</strong></p>
-                              <h3>$2,562</h3>
-                              <p class="small text-muted mb-0"><span>Check and manage your account balance</span></p>
-                            </div>
-                            <div class="col-md-6 my-4 text-center">
-                              <div lass="chart-box mx-4">
-                                <div id="radialbarWidget"></div>
-                              </div>
-                            </div>
-                            <div class="col-md-6 border-top py-3">
-                              <p class="mb-1"><strong class="text-muted">Credit</strong></p>
-                              <h4 class="mb-0">$108</h4>
-                              <p class="small text-muted mb-0"><span>37.7% Last week</span></p>
-                            </div> <!-- .col -->
-                            <div class="col-md-6 border-top py-3">
-                              <p class="mb-1"><strong class="text-muted">Debit</strong></p>
-                              <h4 class="mb-0">$1168</h4>
-                              <p class="small text-muted mb-0"><span>-18.9% Last week</span></p>
-                            </div> <!-- .col -->
-                          </div>
-                        </div> <!-- .card-body -->
-                    </div> <!-- .card -->
-                </div>               
-              </div>
-
+                    <div class="card-body">
+                      <canvas id="areaChartjs" width="400" height="300"></canvas>
+                    </div> <!-- /.card-body -->
+                  </div> <!-- /.card -->
+                </div> <!-- /. col -->
+              </div> <!-- end section -->
               <div class="row">
                 <!-- Recent orders -->
-                <div class="col-md-12">
+                <div class="col-md-8">
                   <div class="card shadow eq-card">
                     <div class="card-header">
-                      <strong class="card-title">Transactions</strong>
+                      <strong class="card-title">Transaction</strong>
+                      <a class="float-right small text-muted" href="#!">View all</a>
                     </div>
                     <div class="card-body">
                       <table class="table table-hover table-borderless table-striped mt-n3 mb-n1">
@@ -118,13 +135,98 @@
                             <td><span class="dot dot-lg bg-warning mr-2"></span></td>
                           </tr>
                           <tr>
+                            <td>3218</td>
+                            <th scope="col">Graham Price</th>
+                            <td>Nunc Lectus Incorporated<br /><span class="small text-muted">Ap #705-5389 Id St.</span></td>
+                            <td>May 23, 2020</td>
+                            <td><span class="dot dot-lg bg-success mr-2"></span></td>
+                          </tr>
+                          <tr>
+                            <td>2651</td>
+                            <th scope="col">Reuben Orr</th>
+                            <td>Nisi Aenean Eget Limited<br />
+                              <span class="small text-muted">7425 Malesuada Rd.</span></td>
+                            <td>Nov 4, 2019</td>
+                            <td><span class="dot dot-lg bg-warning mr-2"></span></td>
+                          </tr>
+                          <tr>
+                            <td>2636</td>
+                            <th scope="col">Akeem Holder</th>
+                            <td>Pellentesque Associates<br />
+                              <span class="small text-muted">896 Sodales St.</span></td>
+                            <td>Mar 27, 2020</td>
+                            <td><span class="dot dot-lg bg-danger mr-2"></span></td>
+                          </tr>
+                          <tr>
+                            <td>2757</td>
+                            <th scope="col">Beau Barrera</th>
+                            <td>Augue Incorporated<br />
+                              <span class="small text-muted">4583 Id St.</span></td>
+                            <td>Jan 13, 2020</td>
+                            <td><span class="dot dot-lg bg-success mr-2"></span></td>
+                          </tr>
                         </tbody>
                       </table>
                     </div> <!-- .card-body -->
                   </div> <!-- .card -->
-                </div> <!-- / .col-md-8 --> <!-- / .col-md-3 -->
+                </div> <!-- / .col-md-8 -->
+                <!-- Recent Activity -->
+                <div class="col-md-4">
+                    <div class="card shadow eq-card mb-4">
+                      <div class="card-header">
+                        <strong class="card-title">Traffic</strong>
+                        <a class="float-right small text-muted" href="#!">View all</a>
+                      </div>
+                      <div class="card-body">
+                        <div class="chart-box mb-3" style="min-height:180px;">
+                          <div id="customAngle"></div>
+                        </div> <!-- .col -->
+                        <div class="mx-auto">
+                          <div class="row align-items-center mb-2">
+                            <div class="col">
+                              <p class="mb-0">Direct</p>
+                              <span class="my-0 text-muted small">+10%</span>
+                            </div>
+                            <div class="col-auto text-right">
+                              <p class="mb-0">218</p>
+                              <span class="dot dot-md bg-success"></span>
+                            </div>
+                          </div>
+                          <div class="row align-items-center mb-2">
+                            <div class="col">
+                              <p class="mb-0">Organic Search</p>
+                              <span class="my-0 text-muted small">+0.6%</span>
+                            </div>
+                            <div class="col-auto text-right">
+                              <p class="mb-0">1002</p>
+                              <span class="dot dot-md bg-warning"></span>
+                            </div>
+                          </div>
+                          <div class="row align-items-center mb-2">
+                            <div class="col">
+                              <p class="mb-0">Referral</p>
+                              <span class="my-0 text-muted small">+1.6%</span>
+                            </div>
+                            <div class="col-auto text-right">
+                              <p class="mb-0">67</p>
+                              <span class="dot dot-md bg-primary"></span>
+                            </div>
+                          </div>
+                          <div class="row align-items-center">
+                            <div class="col">
+                              <p class="mb-0">Social</p>
+                              <span class="my-0 text-muted small">+118%</span>
+                            </div>
+                            <div class="col-auto text-right">
+                              <p class="mb-0">386</p>
+                              <span class="dot dot-md bg-secondary"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div> <!-- .card-body -->
+                    </div> <!-- .card -->
+                  </div> <!-- / .col-md-3 -->
               </div>
-
             </div>
           </div> <!-- .row -->
         </div> <!-- .container-fluid -->
@@ -260,6 +362,8 @@
     <script src="js/config.js"></script>
     <script src="js/apexcharts.min.js"></script>
     <script src="js/apexcharts.custom.js"></script>
+    <script src="js/apps.js"></script>
+    <script src="js/Chart.min.js"></script>
     <script src="js/apps.js"></script>
   </body>
 </html>

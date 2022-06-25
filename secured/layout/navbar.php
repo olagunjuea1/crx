@@ -26,8 +26,8 @@
               </span>
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Profile</a>
-              <a class="dropdown-item" href="#">Settings</a>
+              <a class="dropdown-item" href="Profile.php">Profile</a>
+              <a class="dropdown-item" href="Settings.php">Settings</a>
               <a class="dropdown-item" href="#">Sign Out</a>
             </div>
           </li>
@@ -40,7 +40,7 @@
         <nav class="vertnav navbar navbar-light">
           <!-- nav bar -->
           <div class="w-100 mb-4 d-flex">
-            <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="./index.html">
+            <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="index.php">
               <svg version="1.1" id="logo" class="navbar-brand-img brand-sm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 120 120" xml:space="preserve">
                 <g>
                   <polygon class="st0" points="78,105 15,105 24,87 87,87 	" />
@@ -52,7 +52,7 @@
           </div>
           <ul class="navbar-nav flex-fill w-100 mb-2">
             <li class="nav-item w-100">
-              <a class="nav-link" href="calendar.html">
+              <a class="nav-link" href="index.php">
                 <i class="fe fe-home fe-16"></i>
                 <span class="ml-3 item-text">Overview</span>
               </a>
@@ -63,7 +63,7 @@
           </p>
           <ul class="navbar-nav flex-fill w-100 mb-2">
             <li class="nav-item dropdown">
-              <a class="nav-link" href="calendar.html">
+              <a class="nav-link" href="Transaction.php">
                 <i class="fe fe-bar-chart-2 fe-16"></i>
                 <span class="ml-3 item-text">Transaction</span>
               </a>
@@ -75,30 +75,30 @@
               </a>
               <ul class="collapse list-unstyled pl-4 w-100" id="forms">
                 <li class="nav-item">
-                  <a class="nav-link pl-3" href="./form_elements.html"><span class="ml-1 item-text">Transfer</span></a>
+                  <a class="nav-link pl-3" href="Transfer.php"><span class="ml-1 item-text">Transfer</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link pl-3" href="./form_advanced.html"><span class="ml-1 item-text">Internation Transfer</span></a>
+                  <a class="nav-link pl-3" href="International_transfer.php"><span class="ml-1 item-text">Internation Transfer</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link pl-3" href="./form_validation.html"><span class="ml-1 item-text">Receive</span></a>
+                  <a class="nav-link pl-3" href="Receive.php"><span class="ml-1 item-text">Receive</span></a>
                 </li>
               </ul>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link" href="calendar.html">
+              <a class="nav-link" href="Request_Payment.php">
                 <i class="fe fe-plus-square fe-16"></i>
                 <span class="ml-3 item-text">Request Money</span>
               </a>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link" href="calendar.html">
+              <a class="nav-link" href="Cards.php">
                 <i class="fe fe-credit-card fe-16"></i>
                 <span class="ml-3 item-text">Cards</span>
               </a>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link" href="calendar.html">
+              <a class="nav-link" href="Analytics.php">
                 <i class="fe fe-pie-chart fe-16"></i>
                 <span class="ml-3 item-text">Account Analytics</span>
               </a>
@@ -109,19 +109,19 @@
           </p>
           <ul class="navbar-nav flex-fill w-100 mb-2">
             <li class="nav-item w-100">
-              <a class="nav-link" href="calendar.html">
+              <a class="nav-link" href="Profile.php">
                 <i class="fe fe-user fe-16"></i>
                 <span class="ml-3 item-text">Profile</span>
               </a>
             </li>
             <li class="nav-item w-100">
-              <a class="nav-link" href="calendar.html">
+              <a class="nav-link" href="Notification.php">
                 <i class="fe fe-bell fe-16"></i>
                 <span class="ml-3 item-text">Notification</span>
               </a>
             </li>
             <li class="nav-item w-100">
-              <a class="nav-link" href="calendar.html">
+              <a class="nav-link" href="Settings.php">
                 <i class="fe fe-settings fe-16"></i>
                 <span class="ml-3 item-text">Settings</span>
               </a>
@@ -132,19 +132,19 @@
           </p>
           <ul class="navbar-nav flex-fill w-100 mb-2">
             <li class="nav-item w-100">
-              <a class="nav-link" href="calendar.html">
+              <a class="nav-link" href="calendar.php">
                 <i class="fe fe-tag fe-16"></i>
                 <span class="ml-3 item-text">Tickets</span>
               </a>
             </li>
             <li class="nav-item w-100">
-              <a class="nav-link" href="calendar.html">
+              <a class="nav-link" href="calendar.php">
                 <i class="fe fe-mail fe-16"></i>
                 <span class="ml-3 item-text">Mail Support</span>
               </a>
             </li>
             <li class="nav-item w-100">
-              <a class="nav-link" href="calendar.html">
+              <a class="nav-link" href="calendar.php">
                 <i class="fe fe-message-circle fe-16"></i>
                 <span class="ml-3 item-text">Live Chat</span>
               </a>
@@ -155,14 +155,14 @@
           </p>
           <ul class="navbar-nav flex-fill w-100 mb-2">
             <li class="nav-item w-100">
-              <a class="nav-link" href="../docs/index.html">
+              <a class="nav-link" href="../docs/index.php">
                 <i class="fe fe-log-out fe-16"></i>
                 <span class="ml-3 item-text">Sign Out</span>
               </a>
             </li>
           </ul>
           <div class="btn-box w-100 mt-4 mb-1">
-            <a href="https://themeforest.net/item/tinydash-bootstrap-html-admin-dashboard-template/27511269" target="_blank" class="btn mb-2 btn-primary btn-lg btn-block">
+            <a href="https://themeforest.net/item/tinydash-bootstrap-php-admin-dashboard-template/27511269" target="_blank" class="btn mb-2 btn-primary btn-lg btn-block">
               <i class="fe fe-mail fe-12 mx-2"></i><span class="small">Message Support</span>
             </a>
           </div>

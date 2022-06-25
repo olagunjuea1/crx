@@ -28,103 +28,70 @@
         <div class="container-fluid">
           <div class="row justify-content-center">
             <div class="col-12">
-              <div class="row align-items-center mb-2">
+              <!-- header -->
+              <?php include"layout/header.php"; ?>
+              <!-- header ends here -->
+
+              <div class="row align-items-center mb-4">
                 <div class="col">
-                  <h2 class="h5 page-title">Hello Welcome back,</h2>
-                  <p>James Eric</p>
+                  <h2 class="h5 page-title">Receive</h2>
                 </div>
-                <div class="col-auto">
-                  <form class="form-inline">
-                    <div class="form-group d-none d-lg-inline">
-                      <label for="reportrange" class="sr-only">Date Ranges</label>
-                      <div id="reportrange" class="px-2 py-2 text-muted">
-                        <span class="small"></span>
+              </div> <!-- .row -->
+
+              <div class="row align-items-center justify-content-between">  
+                <div class="col-md-5 py-5 wow zoomIn">
+                    <div class="img-fluid text-center">
+                      <img src="assets/images/banner_image_1.svg" alt="">
+                    </div>
+                  </div>              
+                <div class="col-md-6 py-5 wow fadeInLeft">
+                  <div class="card-deck">
+                    <div class="card shadow mb-4">
+                      <div class="card-header">
+                        <strong class="card-title">Reveive Payment</strong>
+                      </div>
+                      <div class="card-body">
+                        <div class="list-group list-group-flush my-n3">
+                           <div class="list-group-item">
+                            <div class="row align-items-center">
+                              <div class="col-3 col-md-2">
+                                <img src="./assets/products/p1.jpg" alt="..." class="thumbnail-sm">
+                              </div>
+                              <div class="col">
+                                <strong>Account</strong>
+                                <div class="my-0 text-muted small">Checking</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="list-group-item">
+                            <div class="row align-items-center">
+                              <div class="col-3 col-md-2">
+                                <img src="./assets/products/p1.jpg" alt="..." class="thumbnail-sm">
+                              </div>
+                              <div class="col">
+                                <strong>Routing Number</strong>
+                                <div class="my-0 text-muted small">16229920</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="list-group-item">
+                            <div class="row align-items-center">
+                              <div class="col-3 col-md-2">
+                                <img src="./assets/products/p1.jpg" alt="..." class="thumbnail-sm">
+                              </div>
+                              <div class="col">
+                                <strong>Account Number</strong>
+                                <div class="my-0 text-muted small">5282529920</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div> <!-- / .list-group -->
                       </div>
                     </div>
-                    <div class="form-group">
-                      <button type="button" class="btn btn-sm"><span class="fe fe-refresh-ccw fe-16 text-muted"></span></button>
-                      <button type="button" class="btn btn-sm mr-2"><span class="fe fe-filter fe-16 text-muted"></span></button>
-                    </div>
-                  </form>
-                </div>
+                  </div>
+                </div>               
               </div>
-              
-              <div class="row">
-                <!-- Recent orders -->
-                <div class="col-md-12">
-                  <div class="card shadow eq-card">
-                    <div class="card-header">
-                      <strong class="card-title">Transaction</strong>
-                      <a class="float-right small text-muted" href="#!">View all</a>
-                    </div>
-                    <div class="card-body">
-                      <table class="table table-hover table-borderless table-striped mt-n3 mb-n1">
-                        <thead>
-                          <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Company</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>3224</td>
-                            <th scope="col">Keith Baird</th>
-                            <td>Enim Limited<br /><span class="small text-muted">901-6206 Cras Av.</span></td>
-                            <td>Apr 24, 2019</td>
-                            <td><span class="dot dot-lg bg-warning mr-2"></span></td>
-                          </tr>
-                          <tr>
-                            <td>3218</td>
-                            <th scope="col">Graham Price</th>
-                            <td>Nunc Lectus Incorporated<br /><span class="small text-muted">Ap #705-5389 Id St.</span></td>
-                            <td>May 23, 2020</td>
-                            <td><span class="dot dot-lg bg-success mr-2"></span></td>
-                          </tr>
-                          <tr>
-                            <td>2651</td>
-                            <th scope="col">Reuben Orr</th>
-                            <td>Nisi Aenean Eget Limited<br />
-                              <span class="small text-muted">7425 Malesuada Rd.</span></td>
-                            <td>Nov 4, 2019</td>
-                            <td><span class="dot dot-lg bg-warning mr-2"></span></td>
-                          </tr>
-                          <tr>
-                            <td>2636</td>
-                            <th scope="col">Akeem Holder</th>
-                            <td>Pellentesque Associates<br />
-                              <span class="small text-muted">896 Sodales St.</span></td>
-                            <td>Mar 27, 2020</td>
-                            <td><span class="dot dot-lg bg-danger mr-2"></span></td>
-                          </tr>
-                          <tr>
-                            <td>2757</td>
-                            <th scope="col">Beau Barrera</th>
-                            <td>Augue Incorporated<br />
-                              <span class="small text-muted">4583 Id St.</span></td>
-                            <td>Jan 13, 2020</td>
-                            <td><span class="dot dot-lg bg-success mr-2"></span></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div> <!-- .card-body -->
-                  </div> <!-- .card -->
-                </div> <!-- / .col-md-8 -->
-                <!-- Recent Activity -->
-              </div> <!-- end section -->
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="card shadow mb-4">
-                    <div class="card-body">
-                        <div class="my-4">
-                            <div id="lineChart"></div>
-                        </div> <!-- / .list-group -->
-                    </div> <!-- / .card-body -->
-                  </div> <!-- .card -->
-                </div> <!-- .col -->
-              </div> <!-- .row -->
+
             </div>
           </div> <!-- .row -->
         </div> <!-- .container-fluid -->

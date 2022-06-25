@@ -1,3 +1,7 @@
+<?php 
+  include '../includes/__function.php';
+  include 'inc/__user.php';
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -28,62 +32,141 @@
         <div class="container-fluid">
           <div class="row justify-content-center">
             <div class="col-12">
-              <div class="row align-items-center mb-2">
-                <div class="col">
-                  <h2 class="h5 page-title">Hello Welcome back,</h2>
-                  <p>James Eric</p>
-                </div>
-                <div class="col-auto">
-                  <form class="form-inline">
-                    <div class="form-group d-none d-lg-inline">
-                      <label for="reportrange" class="sr-only">Date Ranges</label>
-                      <div id="reportrange" class="px-2 py-2 text-muted">
-                        <span class="small"></span>
+              <!-- header -->
+              <?php include"layout/header.php"; ?>
+              <!-- header ends here -->
+              <div class="card shadow my-4">
+                <div class="card-body">
+                  <div class="row align-items-center my-4">
+                    <div class="col-md-4">
+                      <div class="mx-4">
+                        <strong class="mb-0 text-uppercase text-muted">Balance</strong><br />
+                        <h3>$2,562.30</h3>
+                      </div>
+                      <div class="row align-items-center">
+                        <div class="col-12">
+                          <div class="p-4">
+                            <p class="small text-uppercase text-muted mb-0">Available Balance</p>
+                            <span class="h2 mb-0">$1.2K</span>
+                            <p class="small mb-0">
+                              <span class="fe fe-arrow-up text-success fe-12"></span>
+                              <span class="text-muted ml-1">+1.5%</span>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row align-items-center">
+                        <div class="col-6">
+                          <div class="p-4">
+                            <p class="small text-uppercase text-muted mb-0">Credit</p>
+                            <span class="h2 mb-0">$7.2K</span>
+                            <p class="small mb-0">
+                              <span class="text-muted ml-1">+1.5%</span>
+                            </p>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="p-4">
+                            <p class="small text-uppercase text-muted mb-0">Debit</p>
+                            <span class="h2 mb-0">$1.6K</span>
+                            <p class="small mb-0">
+                              <span class="fe fe-arrow-down text-danger fe-12"></span>
+                              <span class="text-muted ml-1">-2.5%</span>
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div class="form-group">
-                      <button type="button" class="btn btn-sm"><span class="fe fe-refresh-ccw fe-16 text-muted"></span></button>
-                      <button type="button" class="btn btn-sm mr-2"><span class="fe fe-filter fe-16 text-muted"></span></button>
-                    </div>
-                  </form>
-                </div>
+                    <div class="col-md-8">
+                      <div class="mr-4">
+                        <div id="areaChart"></div>
+                      </div>
+                    </div> <!-- .col-md-8 -->
+                  </div> <!-- end section -->
+                </div> <!-- .card-body -->
+              </div> <!-- .card -->
+              <div class="row items-align-baseline">
+                <div class="col-md-12 col-lg-4">
+                  <div class="card shadow eq-card mb-4">
+                    <div class="card-body mb-n3">
+                      <div class="row align-items-center h-100">
+                        <div class="col-md-6 my-3">
+                          <p class="mb-0"><strong class="mb-0 text-uppercase text-muted">Balance</strong></p>
+                          <h3>$2,562</h3>
+                          <p class="small text-muted mb-0"><span>Check and manage your account balance</span></p>
+                        </div>
+                        <div class="col-md-6 my-4 text-center">
+                          <div lass="chart-box mx-4">
+                            <div id="radialbarWidget"></div>
+                          </div>
+                        </div>
+                        <div class="col-md-6 border-top py-3">
+                          <p class="mb-1"><strong class="text-muted">Credit</strong></p>
+                          <h4 class="mb-0">$108</h4>
+                          <p class="small text-muted mb-0"><span>37.7% Last week</span></p>
+                        </div> <!-- .col -->
+                        <div class="col-md-6 border-top py-3">
+                          <p class="mb-1"><strong class="text-muted">Debit</strong></p>
+                          <h4 class="mb-0">$1168</h4>
+                          <p class="small text-muted mb-0"><span>-18.9% Last week</span></p>
+                        </div> <!-- .col -->
+                      </div>
+                    </div> <!-- .card-body -->
+                  </div> <!-- .card -->
+                </div> <!-- .col -->
+                <div class="col-md-12 col-lg-4">
+                  <div class="card shadow eq-card mb-4">
+                    <div class="card-body">
+                      <div class="chart-widget mb-2">
+                        <div id="radialbar"></div>
+                      </div>
+                      <div class="row items-align-center">
+                        <div class="col-4 text-center">
+                          <p class="text-muted mb-1">This Month</p>
+                          <h6 class="mb-1">$1,823</h6>
+                          <p class="text-muted mb-0">+12%</p>
+                        </div>
+                        <div class="col-4 text-center">
+                          <p class="text-muted mb-1">Last Month</p>
+                          <h6 class="mb-1">$6,830</h6>
+                          <p class="text-muted mb-0">+8%</p>
+                        </div>
+                        <div class="col-4 text-center">
+                          <p class="text-muted mb-1">Credit</p>
+                          <h6 class="mb-1">$4,830</h6>
+                          <p class="text-muted mb-0">+8%</p>
+                        </div>
+                      </div>
+                    </div> <!-- .card-body -->
+                  </div> <!-- .card -->
+                </div> <!-- .col -->
+                <div class="col-md-12 col-lg-4">
+                  <div class="card shadow eq-card mb-4">
+                    <div class="card-body">
+                      <div class="d-flex mt-3 mb-4">
+                        <div class="flex-fill pt-2">
+                          <p class="mb-0 text-muted">Total Transaction</p>
+                          <h4 class="mb-0">108</h4>
+                          <span class="small text-muted">+37.7%</span>
+                        </div>
+                        <div class="flex-fill chart-box mt-n2">
+                          <div id="barChartWidget"></div>
+                        </div>
+                      </div> <!-- .d-flex -->
+                      <div class="row border-top">
+                        <div class="col-md-6 pt-4">
+                          <h6 class="mb-0">108 <span class="small text-muted">+37.7%</span></h6>
+                          <p class="mb-0 text-muted">Total Debit</p>
+                        </div>
+                        <div class="col-md-6 pt-4">
+                          <h6 class="mb-0">1168 <span class="small text-muted">-18.9%</span></h6>
+                          <p class="mb-0 text-muted">Total Credit</p>
+                        </div>
+                      </div> <!-- .row -->
+                    </div> <!-- .card-body -->
+                  </div> <!-- .card -->
+                </div> <!-- .col-md -->
               </div>
-              
-
-              <div class="row align-items-center justify-content-between flex-wrap-reverse">                
-                <div class="col-md-6 py-5 wow fadeInLeft">
-                  <div class="card-deck">
-                    <div class="card shadow mb-4">
-                      <div class="card-header">
-                        <strong class="card-title">International Transfer</strong>
-                      </div>
-                      <div class="card-body">
-                        <form>
-                          <div class="form-group">
-                            <label for="inputEmail4">Routing Number</label>
-                            <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
-                          </div>
-                          <div class="form-group">
-                            <label for="inputPassword4">Account Number</label>
-                            <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
-                          </div>
-                          <div class="form-group">
-                            <label for="inputAddress">Amount</label>
-                            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-                          </div>
-                          <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-5 py-5 wow zoomIn">
-                  <div class="img-fluid text-center">
-                    <img src="assets/images/banner_image_1.svg" alt="">
-                  </div>
-                </div>
-              </div>
-
               <div class="row">
                 <div class="col-md-6">
                   <div class="card shadow mb-4">
@@ -221,7 +304,122 @@
                   </div> <!-- .card -->
                 </div> <!-- .col -->
               </div> <!-- .row -->
-
+              <div class="row">
+                <!-- Recent orders -->
+                <div class="col-md-8">
+                  <div class="card shadow eq-card">
+                    <div class="card-header">
+                      <strong class="card-title">Transaction</strong>
+                      <a class="float-right small text-muted" href="#!">View all</a>
+                    </div>
+                    <div class="card-body">
+                      <table class="table table-hover table-borderless table-striped mt-n3 mb-n1">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>3224</td>
+                            <th scope="col">Keith Baird</th>
+                            <td>Enim Limited<br /><span class="small text-muted">901-6206 Cras Av.</span></td>
+                            <td>Apr 24, 2019</td>
+                            <td><span class="dot dot-lg bg-warning mr-2"></span></td>
+                          </tr>
+                          <tr>
+                            <td>3218</td>
+                            <th scope="col">Graham Price</th>
+                            <td>Nunc Lectus Incorporated<br /><span class="small text-muted">Ap #705-5389 Id St.</span></td>
+                            <td>May 23, 2020</td>
+                            <td><span class="dot dot-lg bg-success mr-2"></span></td>
+                          </tr>
+                          <tr>
+                            <td>2651</td>
+                            <th scope="col">Reuben Orr</th>
+                            <td>Nisi Aenean Eget Limited<br />
+                              <span class="small text-muted">7425 Malesuada Rd.</span></td>
+                            <td>Nov 4, 2019</td>
+                            <td><span class="dot dot-lg bg-warning mr-2"></span></td>
+                          </tr>
+                          <tr>
+                            <td>2636</td>
+                            <th scope="col">Akeem Holder</th>
+                            <td>Pellentesque Associates<br />
+                              <span class="small text-muted">896 Sodales St.</span></td>
+                            <td>Mar 27, 2020</td>
+                            <td><span class="dot dot-lg bg-danger mr-2"></span></td>
+                          </tr>
+                          <tr>
+                            <td>2757</td>
+                            <th scope="col">Beau Barrera</th>
+                            <td>Augue Incorporated<br />
+                              <span class="small text-muted">4583 Id St.</span></td>
+                            <td>Jan 13, 2020</td>
+                            <td><span class="dot dot-lg bg-success mr-2"></span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div> <!-- .card-body -->
+                  </div> <!-- .card -->
+                </div> <!-- / .col-md-8 -->
+                <!-- Recent Activity -->
+                <div class="col-md-4">
+                  <div class="card shadow eq-card timeline">
+                    <div class="card-header">
+                      <strong class="card-title">Recent Activity</strong>
+                      <a class="float-right small text-muted" href="#!">View all</a>
+                    </div>
+                    <div class="card-body" data-simplebar style="height: 360px; overflow-y: auto; overflow-x: hidden;">
+                      <div class="pb-3 timeline-item item-primary">
+                        <div class="pl-5">
+                          <div class="mb-1 small"><strong>@Brown Asher</strong><span class="text-muted mx-2">Just create new layout Index, form, table</span><strong>Tiny Admin</strong></div>
+                          <p class="small text-muted">Creative Design <span class="badge badge-light">1h ago</span>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="pb-3 timeline-item item-warning">
+                        <div class="pl-5">
+                          <div class="mb-3 small"><strong>@Fletcher Everett</strong><span class="text-muted mx-2">created new group for</span><strong>Tiny Admin</strong></div>
+                          <ul class="avatars-list mb-2">
+                            <li>
+                              <a href="#!" class="avatar avatar-sm">
+                                <img alt="..." class="avatar-img rounded-circle" src="./assets/avatars/face-1.jpg">
+                              </a>
+                            </li>
+                            <li>
+                              <a href="#!" class="avatar avatar-sm">
+                                <img alt="..." class="avatar-img rounded-circle" src="./assets/avatars/face-4.jpg">
+                              </a>
+                            </li>
+                            <li>
+                              <a href="#!" class="avatar avatar-sm">
+                                <img alt="..." class="avatar-img rounded-circle" src="./assets/avatars/face-3.jpg">
+                              </a>
+                            </li>
+                          </ul>
+                          <p class="small text-muted">Front-End Development <span class="badge badge-light">1h ago</span>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="pb-3 timeline-item item-success">
+                        <div class="pl-5">
+                          <div class="mb-2 small"><strong>@Kelley Sonya</strong><span class="text-muted mx-2">has commented on</span><strong>Advanced table</strong></div>
+                          <div class="card d-inline-flex mb-2">
+                            <div class="card-body bg-light small py-2 px-3"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. </div>
+                          </div>
+                          <p class="small text-muted">Back-End Development <span class="badge badge-light">1h ago</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div> <!-- / .card-body -->
+                  </div> <!-- / .card -->
+                </div> <!-- / .col-md-3 -->
+              </div> <!-- end section -->
             </div>
           </div> <!-- .row -->
         </div> <!-- .container-fluid -->

@@ -28,199 +28,112 @@
         <div class="container-fluid">
           <div class="row justify-content-center">
             <div class="col-12">
-              <div class="row align-items-center mb-2">
+              <!-- header -->
+              <?php include"layout/header.php"; ?>
+              <!-- header ends here -->
+              <div class="row align-items-center mb-4">
                 <div class="col">
-                  <h2 class="h5 page-title">Hello Welcome back,</h2>
-                  <p>James Eric</p>
+                  <h2 class="h5 page-title">Request</h2>
                 </div>
-                <div class="col-auto">
-                  <form class="form-inline">
-                    <div class="form-group d-none d-lg-inline">
-                      <label for="reportrange" class="sr-only">Date Ranges</label>
-                      <div id="reportrange" class="px-2 py-2 text-muted">
-                        <span class="small"></span>
-                      </div>
+              </div> <!-- .row -->
+              <div class="row align-items-center justify-content-between">  
+                <div class="col-md-5 py-5 wow zoomIn">
+                    <div class="img-fluid text-center">
+                      <img src="assets/images/banner_image_1.svg" alt="">
                     </div>
-                    <div class="form-group">
-                      <button type="button" class="btn btn-sm"><span class="fe fe-refresh-ccw fe-16 text-muted"></span></button>
-                      <button type="button" class="btn btn-sm mr-2"><span class="fe fe-filter fe-16 text-muted"></span></button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-              
-
-              <div class="row align-items-center justify-content-between flex-wrap-reverse">                
+                  </div>              
                 <div class="col-md-6 py-5 wow fadeInLeft">
                   <div class="card-deck">
                     <div class="card shadow mb-4">
                       <div class="card-header">
-                        <strong class="card-title">Transfer</strong>
+                        <strong class="card-title">Request Payment</strong>
                       </div>
                       <div class="card-body">
                         <form>
                           <div class="form-group">
-                            <label for="inputEmail4">Routing Number</label>
+                            <label for="inputEmail4">User#ID</label>
                             <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
                           </div>
                           <div class="form-group">
-                            <label for="inputPassword4">Account Number</label>
+                            <label for="inputPassword4">Amount</label>
                             <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
                           </div>
                           <div class="form-group">
-                            <label for="inputAddress">Amount</label>
-                            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                            <label for="inputAddress">Note</label>
+                            <textarea name="" id="" class="form-control"></textarea>
                           </div>
-                          <button type="submit" class="btn btn-primary">Submit</button>
+                          <button type="submit" class="btn btn-primary">Request Payment</button>
                         </form>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-md-5 py-5 wow zoomIn">
-                  <div class="img-fluid text-center">
-                    <img src="assets/images/banner_image_1.svg" alt="">
-                  </div>
-                </div>
+                </div>               
               </div>
 
               <div class="row">
-                <div class="col-md-6">
-                  <div class="card shadow mb-4">
+                <!-- Recent orders -->
+                <div class="col-md-12">
+                  <div class="card shadow eq-card">
                     <div class="card-header">
-                      <strong>Top Transaction</strong>
+                      <strong class="card-title">Request History</strong>
+                      <a class="float-right small text-muted" href="#!">View all</a>
                     </div>
-                    <div class="card-body px-4">
-                      <div class="row border-bottom">
-                        <div class="col-4 text-center mb-3">
-                          <p class="mb-1 small text-muted">Total Balance</p>
-                          <span class="h3">26</span><br />
-                          <span class="small text-muted">+20%</span>
-                          <span class="fe fe-arrow-up text-success fe-12"></span>
-                        </div>
-                        <div class="col-4 text-center mb-3">
-                          <p class="mb-1 small text-muted">Total Debit</p>
-                          <span class="h3">$260</span><br />
-                          <span class="small text-muted">+6%</span>
-                          <span class="fe fe-arrow-up text-success fe-12"></span>
-                        </div>
-                        <div class="col-4 text-center mb-3">
-                          <p class="mb-1 small text-muted">Total Cedit</p>
-                          <span class="h3">6%</span><br />
-                          <span class="small text-muted">-2%</span>
-                          <span class="fe fe-arrow-down text-danger fe-12"></span>
-                        </div>
-                      </div>
-                      <table class="table table-borderless mt-3 mb-1 mx-n1 table-sm">
+                    <div class="card-body">
+                      <table class="table table-hover table-borderless table-striped mt-n3 mb-n1">
                         <thead>
                           <tr>
-                            <th class="w-50">Goal</th>
-                            <th class="text-right">Conversion</th>
-                            <th class="text-right">Completions</th>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Date</th>
+                            <th>Status</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr>
-                            <td>Checkout</td>
-                            <td class="text-right">5%</td>
-                            <td class="text-right">260</td>
+                            <td>3224</td>
+                            <th scope="col">Keith Baird</th>
+                            <td>Enim Limited<br /><span class="small text-muted">901-6206 Cras Av.</span></td>
+                            <td>Apr 24, 2019</td>
+                            <td><span class="dot dot-lg bg-warning mr-2"></span></td>
                           </tr>
                           <tr>
-                            <td>Add to Cart</td>
-                            <td class="text-right">55%</td>
-                            <td class="text-right">1260</td>
+                            <td>3218</td>
+                            <th scope="col">Graham Price</th>
+                            <td>Nunc Lectus Incorporated<br /><span class="small text-muted">Ap #705-5389 Id St.</span></td>
+                            <td>May 23, 2020</td>
+                            <td><span class="dot dot-lg bg-success mr-2"></span></td>
                           </tr>
                           <tr>
-                            <td>Contact</td>
-                            <td class="text-right">18%</td>
-                            <td class="text-right">460</td>
+                            <td>2651</td>
+                            <th scope="col">Reuben Orr</th>
+                            <td>Nisi Aenean Eget Limited<br />
+                              <span class="small text-muted">7425 Malesuada Rd.</span></td>
+                            <td>Nov 4, 2019</td>
+                            <td><span class="dot dot-lg bg-warning mr-2"></span></td>
+                          </tr>
+                          <tr>
+                            <td>2636</td>
+                            <th scope="col">Akeem Holder</th>
+                            <td>Pellentesque Associates<br />
+                              <span class="small text-muted">896 Sodales St.</span></td>
+                            <td>Mar 27, 2020</td>
+                            <td><span class="dot dot-lg bg-danger mr-2"></span></td>
+                          </tr>
+                          <tr>
+                            <td>2757</td>
+                            <th scope="col">Beau Barrera</th>
+                            <td>Augue Incorporated<br />
+                              <span class="small text-muted">4583 Id St.</span></td>
+                            <td>Jan 13, 2020</td>
+                            <td><span class="dot dot-lg bg-success mr-2"></span></td>
                           </tr>
                         </tbody>
                       </table>
                     </div> <!-- .card-body -->
                   </div> <!-- .card -->
-                </div> <!-- .col -->
-                <div class="col-md-6">
-                  <div class="card shadow mb-4">
-                    <div class="card-header">
-                      <strong class="card-title">Recent Transaction</strong>
-                      <a class="float-right small text-muted" href="#!">View all</a>
-                    </div>
-                    <div class="card-body">
-                      <div class="list-group list-group-flush my-n3">
-                        <div class="list-group-item">
-                          <div class="row align-items-center">
-                            <div class="col-3 col-md-2">
-                              <img src="./assets/products/p1.jpg" alt="..." class="thumbnail-sm">
-                            </div>
-                            <div class="col">
-                              <strong>Fusion Backpack</strong>
-                              <div class="my-0 text-muted small">Gear, Bags</div>
-                            </div>
-                            <div class="col-auto">
-                              <strong>+85%</strong>
-                              <div class="progress mt-2" style="height: 4px;">
-                                <div class="progress-bar" role="progressbar" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="list-group-item">
-                          <div class="row align-items-center">
-                            <div class="col-3 col-md-2">
-                              <img src="./assets/products/p2.jpg" alt="..." class="thumbnail-sm">
-                            </div>
-                            <div class="col">
-                              <strong>Luma hoodies</strong>
-                              <div class="my-0 text-muted small">Jackets, Men</div>
-                            </div>
-                            <div class="col-auto">
-                              <strong>+75%</strong>
-                              <div class="progress mt-2" style="height: 4px;">
-                                <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="list-group-item">
-                          <div class="row align-items-center">
-                            <div class="col-3 col-md-2">
-                              <img src="./assets/products/p3.jpg" alt="..." class="thumbnail-sm">
-                            </div>
-                            <div class="col">
-                              <strong>Luma shorts</strong>
-                              <div class="my-0 text-muted small">Shorts, Men</div>
-                            </div>
-                            <div class="col-auto">
-                              <strong>+62%</strong>
-                              <div class="progress mt-2" style="height: 4px;">
-                                <div class="progress-bar" role="progressbar" style="width: 62%" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="list-group-item">
-                          <div class="row align-items-center">
-                            <div class="col-3 col-md-2">
-                              <img src="./assets/products/p4.jpg" alt="..." class="thumbnail-sm">
-                            </div>
-                            <div class="col">
-                              <strong>Brown Trousers</strong>
-                              <div class="my-0 text-muted small">Trousers, Women</div>
-                            </div>
-                            <div class="col-auto">
-                              <strong>+24%</strong>
-                              <div class="progress mt-2" style="height: 4px;">
-                                <div class="progress-bar" role="progressbar" style="width: 24%" aria-valuenow="24" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div> <!-- / .list-group -->
-                    </div> <!-- / .card-body -->
-                  </div> <!-- .card -->
-                </div> <!-- .col -->
-              </div> <!-- .row -->
+                </div> <!-- / .col-md-8 --> <!-- / .col-md-3 -->
+              </div>
 
             </div>
           </div> <!-- .row -->
