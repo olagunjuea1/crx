@@ -1,0 +1,1 @@
+<?php include '../../includes/__function.php'; ?>

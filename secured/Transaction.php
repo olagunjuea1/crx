@@ -1,3 +1,7 @@
+<?php 
+  include '../includes/__function.php';
+  include 'inc/__user.php';
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -38,58 +42,81 @@
                   <div class="card shadow eq-card">
                     <div class="card-header">
                       <strong class="card-title">Transaction</strong>
-                      <a class="float-right small text-muted" href="#!">View all</a>
                     </div>
                     <div class="card-body">
                       <table class="table table-hover table-borderless table-striped mt-n3 mb-n1">
                         <thead>
                           <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Company</th>
-                            <th>Date</th>
+                            <th>S/N</th>
+                            <th>TNX ID</th>
+                            <th>Transaction</th>
+                            <th>Amount</th>
+                            <th>Date</th>    
                             <th>Status</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>3224</td>
-                            <th scope="col">Keith Baird</th>
-                            <td>Enim Limited<br /><span class="small text-muted">901-6206 Cras Av.</span></td>
-                            <td>Apr 24, 2019</td>
-                            <td><span class="dot dot-lg bg-warning mr-2"></span></td>
-                          </tr>
-                          <tr>
-                            <td>3218</td>
-                            <th scope="col">Graham Price</th>
-                            <td>Nunc Lectus Incorporated<br /><span class="small text-muted">Ap #705-5389 Id St.</span></td>
-                            <td>May 23, 2020</td>
-                            <td><span class="dot dot-lg bg-success mr-2"></span></td>
-                          </tr>
-                          <tr>
-                            <td>2651</td>
-                            <th scope="col">Reuben Orr</th>
-                            <td>Nisi Aenean Eget Limited<br />
-                              <span class="small text-muted">7425 Malesuada Rd.</span></td>
-                            <td>Nov 4, 2019</td>
-                            <td><span class="dot dot-lg bg-warning mr-2"></span></td>
-                          </tr>
-                          <tr>
-                            <td>2636</td>
-                            <th scope="col">Akeem Holder</th>
-                            <td>Pellentesque Associates<br />
-                              <span class="small text-muted">896 Sodales St.</span></td>
-                            <td>Mar 27, 2020</td>
-                            <td><span class="dot dot-lg bg-danger mr-2"></span></td>
-                          </tr>
-                          <tr>
-                            <td>2757</td>
-                            <th scope="col">Beau Barrera</th>
-                            <td>Augue Incorporated<br />
-                              <span class="small text-muted">4583 Id St.</span></td>
-                            <td>Jan 13, 2020</td>
-                            <td><span class="dot dot-lg bg-success mr-2"></span></td>
-                          </tr>
+                          <?php
+                            $total_data = fetchTnxdata_rev($conn, $userid);
+                            if (!empty($total_data)) {
+                              if (count($total_data) > 15) {$ycount = 15;}
+                              else{$ycount = count($total_data);}
+                              $counter = 1;
+                              for ($x=0; $x < $ycount; $x++) { ?>
+                                <?php $exp_data = explode("--", $total_data[$x]); ?>
+                                <tr>
+                                  <td><?php echo $counter++; ?></td>  
+                                  <td><small><?php echo $exp_data[0]; ?></small></td>  
+                                  <?php 
+                                    if (strtolower($exp_data[1]) == 'credit') {
+                                      $tnx_color = 'success';
+                                    }
+                                    elseif (strtolower($exp_data[1]) == 'debit') {
+                                      $tnx_color = 'danger';
+                                    }
+                                    else{
+                                      $tnx_color = 'muted';
+                                    }
+                                  ?>                                
+                                  <td><?php echo ucfirst($exp_data[1]); ?><br /><span class="dot dot-md bg-<?php echo $tnx_color; ?> mr-2"></span><span class="small text-muted">901-6206 Cras Av.</span></td>     
+                                  <td>
+                                    $<?php echo number_format($exp_data[4], 2) ?>                                      
+                                  </td>                              
+                                  <td>
+                                    <?php 
+                                      $date_exp = explode(" ", $exp_data[6]);
+                                      $time_exp = explode(":", $date_exp[3]);
+                                      echo $date_exp[0]." ".$date_exp[1]." ".$date_exp[2]." ".$time_exp[0].":".$time_exp[1];
+                                    ?>                                      
+                                  </td>
+                                  <?php 
+                                    if (strtolower($exp_data[5]) == 'success') {
+                                      $stat_color = 'success';
+                                      $stat_message = 'Successful';
+                                    }
+                                    elseif (strtolower($exp_data[5]) == 'pending') {
+                                      $stat_color = 'warning';
+                                      $stat_message = 'pending';
+                                    }
+                                    elseif (strtolower($exp_data[5]) == 'failed') {
+                                      $stat_color = 'danger';
+                                      $stat_message = 'Failed';
+                                    }
+                                    else{
+                                      $stat_color = 'muted';
+                                      $stat_message = $exp_data[5];
+                                    }
+                                  ?>
+                                  <td><span class="dot dot-md bg-<?php echo $stat_color; ?> mr-2"></span> <small class="text-muted"><?php echo ucfirst($stat_message); ?></small></td>
+                                </tr>
+                              <?php }  
+                            }
+                            else{ ?>
+                              <tr>
+                                <td colspan="5">No Data yet</td>
+                              </tr>
+                            <?php }
+                          ?>
                         </tbody>
                       </table>
                     </div> <!-- .card-body -->

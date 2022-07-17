@@ -51,12 +51,12 @@
                       <div class="card-body">
                         <form>
                           <div class="form-group">
-                            <label for="inputEmail4">User#ID</label>
+                            <label for="inputEmail4">Email</label>
                             <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
                           </div>
                           <div class="form-group">
                             <label for="inputPassword4">Amount</label>
-                            <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
+                            <input type="text" class="form-control" id="inputPassword4" placeholder="Amount">
                           </div>
                           <div class="form-group">
                             <label for="inputAddress">Note</label>

@@ -66,7 +66,9 @@ body {
   line-height: 1.5;
   color: #6c757d;
   text-align: left;
-  background-color: #f8f9fa; }
+  background-color: #f8f9fa; 
+  overflow-x: hidden;
+}
 
 [tabindex="-1"]:focus:not(:focus-visible) {
   outline: 0 !important; }
@@ -1440,7 +1442,7 @@ pre {
 .form-control {
   display: block;
   width: 100%;
-  height: calc(1.5em + 0.75rem + 2px);
+  height: calc(2.5em + 0.75rem + 2px);
   padding: 0.375rem 0.75rem;
   font-size: 0.875rem;
   font-weight: 400;
@@ -12042,3 +12044,26 @@ a.uppy-Dashboard-poweredBy {
     font-size: 35px;
     top: -10px;
     right: -35px; } }
+
+.bk_alert{
+  min-width: 300px; 
+  max-width: 300px; 
+  position: fixed; 
+  right: 10px; 
+  z-index: 9999; 
+  font-size: 14px;
+  top: 75px;
+}
+@media (max-width: 301px){
+  .bk_alert{
+    min-width: 90%; 
+    max-width: 90%; 
+    right: calc(0.1rem + 15px) !important;
+  }
+}
+.hidden{
+  display: none;
+}
+.pb_fxs{
+  font-size: 13px;
+}

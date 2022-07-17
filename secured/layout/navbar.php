@@ -69,11 +69,11 @@
               </a>
             </li>
             <li class="nav-item dropdown">
-              <a href="#forms" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+              <a href="#sendandreceive" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
                 <i class="fe fe-send fe-16"></i>
                 <span class="ml-3 item-text">Send & Receive</span>
               </a>
-              <ul class="collapse list-unstyled pl-4 w-100" id="forms">
+              <ul class="collapse list-unstyled pl-4 w-100" id="sendandreceive">
                 <li class="nav-item">
                   <a class="nav-link pl-3" href="Transfer.php"><span class="ml-1 item-text">Transfer</span></a>
                 </li>
