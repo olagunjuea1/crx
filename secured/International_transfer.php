@@ -1,3 +1,7 @@
+<?php 
+  include '../includes/__function.php';
+  include 'inc/__user.php';
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -31,6 +35,39 @@
               <!-- header -->
               <?php include"layout/header.php"; ?>
               <!-- header ends here -->
+              <div class="alert bg-warning text-white alert-dismissible fade show mt-2 bk_alert hidden">  
+                 <span id="trf_msg"></span>             
+                <button type="button" class="close" aria-label="Close">
+                  <span aria-hidden="true" id="closeErr"><i class="fe fe-x fe-16"></i></span>
+                </button>
+              </div>
+
+              <!-- modal -->
+              <style type="text/css">
+                #trf_modal{
+                  width: 300px;
+                  right: 0 !important;
+                  left: inherit;
+                }
+              </style>
+              <div class="modal fade modal-right modal-slide show" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-modal="true" aria-hidden="true" id="trf_modal">
+                <div class="modal-dialog modal-sm" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="defaultModalLabel">Pending Transaction</h5>
+                    </div>
+                    <div class="modal-body"> 
+                      <?php 
+                        $lasttnx = get_last_pending_tnx_debit($conn, $userid);
+                      ?>
+                      <p>You have a pending transaction of $<?php echo number_format($lasttnx[0][4], 2) ?> in progress, please verify the transaction to continue transfer</p>
+
+                      <a href="auth/auth-validate.php?verifykey=<?php echo urlencode(base64_encode(base64_encode($lasttnx[0][0]))); ?>"><button class="btn btn-primary btn-md mb-2">Verify Transaction</button></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div class="row align-items-center justify-content-between flex-wrap-reverse">                
                 <div class="col-md-6 py-5 wow fadeInLeft">
                   <div class="card-deck">
@@ -41,18 +78,38 @@
                       <div class="card-body">
                         <form>
                           <div class="form-group">
-                            <label for="inputEmail4">Routing Number</label>
-                            <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                            <label for="int_tnx_option">Country</label>
+                            <select class="form-control" id="inp_country">
+                              <option value="australia" selected>Australia</option>                              
+                              <option value="india">India</option>
+                              <option value="intdefault">Other countries</option>
+                            </select>
                           </div>
                           <div class="form-group">
-                            <label for="inputPassword4">Account Number</label>
-                            <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
+                            <label for="inp_fullname">Receipient's full name</label>
+                            <input type="text" class="form-control" id="inp_fullname" placeholder="Receipient's full name">
                           </div>
                           <div class="form-group">
-                            <label for="inputAddress">Amount</label>
-                            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                            <label for="inp_amount">Amount</label>
+                            <input type="text" class="form-control" id="inp_amount" placeholder="Amount">
+                          </div>  
+                          <div class="form-group hidden int inpbsb">
+                            <label for="receipent_bsb_number">Receipient's Bank-State-Branch (BSB) number</label>
+                            <input type="text" class="form-control" id="receipent_bsb_number" placeholder="Receipient's BSB number">
                           </div>
-                          <button type="submit" class="btn btn-primary">Submit</button>
+                          <div class="form-group hidden inpacctno">
+                            <label for="receipent_account_number">Receipient's Account number</label>
+                            <input type="text" class="form-control" id="receipent_account_number" placeholder="Receipient's Account number">
+                          </div>
+                          <div class="form-group hidden inpiban">
+                            <label for="receipent_iban_number">Receipient's IBAN</label>
+                            <input type="text" class="form-control" id="receipent_iban_number" placeholder="Receipient's IBAN">
+                          </div>
+                          <div class="form-group hidden inpifsc">
+                            <label for="receipent_ifsc_number">Receipient's IFSC</label>
+                            <input type="text" class="form-control" id="receipent_ifsc_number" placeholder="Receipient's IFSC">
+                          </div>                        
+                          <button type="submit" class="btn btn-primary" id="inttrfbtn">Transfer</button>
                         </form>
                       </div>
                     </div>
@@ -66,269 +123,16 @@
               </div>
 
               <div class="row">
-                <div class="col-md-6">
-                  <div class="card shadow mb-4">
-                    <div class="card-header">
-                      <strong>Top Transaction</strong>
-                    </div>
-                    <div class="card-body px-4">
-                      <div class="row border-bottom">
-                        <div class="col-4 text-center mb-3">
-                          <p class="mb-1 small text-muted">Total Balance</p>
-                          <span class="h3">26</span><br />
-                          <span class="small text-muted">+20%</span>
-                          <span class="fe fe-arrow-up text-success fe-12"></span>
-                        </div>
-                        <div class="col-4 text-center mb-3">
-                          <p class="mb-1 small text-muted">Total Debit</p>
-                          <span class="h3">$260</span><br />
-                          <span class="small text-muted">+6%</span>
-                          <span class="fe fe-arrow-up text-success fe-12"></span>
-                        </div>
-                        <div class="col-4 text-center mb-3">
-                          <p class="mb-1 small text-muted">Total Cedit</p>
-                          <span class="h3">6%</span><br />
-                          <span class="small text-muted">-2%</span>
-                          <span class="fe fe-arrow-down text-danger fe-12"></span>
-                        </div>
-                      </div>
-                      <table class="table table-borderless mt-3 mb-1 mx-n1 table-sm">
-                        <thead>
-                          <tr>
-                            <th class="w-50">Goal</th>
-                            <th class="text-right">Conversion</th>
-                            <th class="text-right">Completions</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>Checkout</td>
-                            <td class="text-right">5%</td>
-                            <td class="text-right">260</td>
-                          </tr>
-                          <tr>
-                            <td>Add to Cart</td>
-                            <td class="text-right">55%</td>
-                            <td class="text-right">1260</td>
-                          </tr>
-                          <tr>
-                            <td>Contact</td>
-                            <td class="text-right">18%</td>
-                            <td class="text-right">460</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div> <!-- .card-body -->
-                  </div> <!-- .card -->
-                </div> <!-- .col -->
-                <div class="col-md-6">
-                  <div class="card shadow mb-4">
-                    <div class="card-header">
-                      <strong class="card-title">Recent Transaction</strong>
-                      <a class="float-right small text-muted" href="#!">View all</a>
-                    </div>
-                    <div class="card-body">
-                      <div class="list-group list-group-flush my-n3">
-                        <div class="list-group-item">
-                          <div class="row align-items-center">
-                            <div class="col-3 col-md-2">
-                              <img src="./assets/products/p1.jpg" alt="..." class="thumbnail-sm">
-                            </div>
-                            <div class="col">
-                              <strong>Fusion Backpack</strong>
-                              <div class="my-0 text-muted small">Gear, Bags</div>
-                            </div>
-                            <div class="col-auto">
-                              <strong>+85%</strong>
-                              <div class="progress mt-2" style="height: 4px;">
-                                <div class="progress-bar" role="progressbar" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="list-group-item">
-                          <div class="row align-items-center">
-                            <div class="col-3 col-md-2">
-                              <img src="./assets/products/p2.jpg" alt="..." class="thumbnail-sm">
-                            </div>
-                            <div class="col">
-                              <strong>Luma hoodies</strong>
-                              <div class="my-0 text-muted small">Jackets, Men</div>
-                            </div>
-                            <div class="col-auto">
-                              <strong>+75%</strong>
-                              <div class="progress mt-2" style="height: 4px;">
-                                <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="list-group-item">
-                          <div class="row align-items-center">
-                            <div class="col-3 col-md-2">
-                              <img src="./assets/products/p3.jpg" alt="..." class="thumbnail-sm">
-                            </div>
-                            <div class="col">
-                              <strong>Luma shorts</strong>
-                              <div class="my-0 text-muted small">Shorts, Men</div>
-                            </div>
-                            <div class="col-auto">
-                              <strong>+62%</strong>
-                              <div class="progress mt-2" style="height: 4px;">
-                                <div class="progress-bar" role="progressbar" style="width: 62%" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="list-group-item">
-                          <div class="row align-items-center">
-                            <div class="col-3 col-md-2">
-                              <img src="./assets/products/p4.jpg" alt="..." class="thumbnail-sm">
-                            </div>
-                            <div class="col">
-                              <strong>Brown Trousers</strong>
-                              <div class="my-0 text-muted small">Trousers, Women</div>
-                            </div>
-                            <div class="col-auto">
-                              <strong>+24%</strong>
-                              <div class="progress mt-2" style="height: 4px;">
-                                <div class="progress-bar" role="progressbar" style="width: 24%" aria-valuenow="24" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div> <!-- / .list-group -->
-                    </div> <!-- / .card-body -->
-                  </div> <!-- .card -->
-                </div> <!-- .col -->
+                <?php include 'layout/top_tnx.php'; ?>
+                <!-- .col -->
+                <?php include 'layout/recent_tnx.php'; ?>
+                <!-- .col -->
               </div> <!-- .row -->
 
             </div>
           </div> <!-- .row -->
         </div> <!-- .container-fluid -->
-        <div class="modal fade modal-notif modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="defaultModalLabel">Notifications</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="list-group list-group-flush my-n3">
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-box fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Package has uploaded successfull</strong></small>
-                        <div class="my-0 text-muted small">Package is zipped and uploaded</div>
-                        <small class="badge badge-pill badge-light text-muted">1m ago</small>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-download fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Widgets are updated successfull</strong></small>
-                        <div class="my-0 text-muted small">Just create new layout Index, form, table</div>
-                        <small class="badge badge-pill badge-light text-muted">2m ago</small>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-inbox fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Notifications have been sent</strong></small>
-                        <div class="my-0 text-muted small">Fusce dapibus, tellus ac cursus commodo</div>
-                        <small class="badge badge-pill badge-light text-muted">30m ago</small>
-                      </div>
-                    </div> <!-- / .row -->
-                  </div>
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-link fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Link was attached to menu</strong></small>
-                        <div class="my-0 text-muted small">New layout has been attached to the menu</div>
-                        <small class="badge badge-pill badge-light text-muted">1h ago</small>
-                      </div>
-                    </div>
-                  </div> <!-- / .row -->
-                </div> <!-- / .list-group -->
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Clear All</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal fade modal-shortcut modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="defaultModalLabel">Shortcuts</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body px-5">
-                <div class="row align-items-center">
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-success justify-content-center">
-                      <i class="fe fe-cpu fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Control area</p>
-                  </div>
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-activity fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Activity</p>
-                  </div>
-                </div>
-                <div class="row align-items-center">
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-droplet fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Droplet</p>
-                  </div>
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-upload-cloud fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Upload</p>
-                  </div>
-                </div>
-                <div class="row align-items-center">
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-users fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Users</p>
-                  </div>
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-settings fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Settings</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <?php include 'layout/notification.php'; ?>
       </main> <!-- main -->
     </div> <!-- .wrapper -->
     <script src="js/jquery.min.js"></script>
@@ -339,5 +143,6 @@
     <script src="js/apexcharts.min.js"></script>
     <script src="js/apexcharts.custom.js"></script>
     <script src="js/apps.js"></script>
+    <script src="script/inttransfer.js"></script>
   </body>
 </html>

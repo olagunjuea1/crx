@@ -8,11 +8,6 @@
               <i class="fe fe-sun fe-16"></i>
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" data-target=".modal-shortcut">
-              <span class="fe fe-grid fe-16"></span>
-            </a>
-          </li>
           <li class="nav-item nav-notif">
             <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" data-target=".modal-notif">
               <span class="fe fe-bell fe-16"></span>
@@ -22,7 +17,7 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-muted pr-0" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="avatar avatar-sm mt-2">
-                <img src="./assets/avatars/face-1.jpg" alt="..." class="avatar-img rounded-circle">
+                <img src="./assets/avatars/avatar.png" alt="..." class="avatar-img rounded-circle">
               </span>
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
@@ -41,13 +36,7 @@
           <!-- nav bar -->
           <div class="w-100 mb-4 d-flex">
             <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="index.php">
-              <svg version="1.1" id="logo" class="navbar-brand-img brand-sm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 120 120" xml:space="preserve">
-                <g>
-                  <polygon class="st0" points="78,105 15,105 24,87 87,87 	" />
-                  <polygon class="st0" points="96,69 33,69 42,51 105,51 	" />
-                  <polygon class="st0" points="78,33 15,33 24,15 87,15 	" />
-                </g>
-              </svg>
+              <img src="assets/images/logo.svg" width="25px">
             </a>
           </div>
           <ul class="navbar-nav flex-fill w-100 mb-2">
@@ -78,7 +67,7 @@
                   <a class="nav-link pl-3" href="Transfer.php"><span class="ml-1 item-text">Transfer</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link pl-3" href="International_transfer.php"><span class="ml-1 item-text">Internation Transfer</span></a>
+                  <a class="nav-link pl-3" href="International_transfer.php"><span class="ml-1 item-text">International Transfer</span></a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link pl-3" href="Receive.php"><span class="ml-1 item-text">Receive</span></a>
@@ -132,26 +121,20 @@
           </p>
           <ul class="navbar-nav flex-fill w-100 mb-2">
             <li class="nav-item w-100">
-              <a class="nav-link" href="calendar.php">
-                <i class="fe fe-tag fe-16"></i>
-                <span class="ml-3 item-text">Tickets</span>
-              </a>
-            </li>
-            <li class="nav-item w-100">
-              <a class="nav-link" href="calendar.php">
+              <a class="nav-link" href="mailto:<?php echo fetchdataall($conn, 'site_data', 'customermail'); ?>">
                 <i class="fe fe-mail fe-16"></i>
                 <span class="ml-3 item-text">Mail Support</span>
               </a>
             </li>
             <li class="nav-item w-100">
-              <a class="nav-link" href="calendar.php">
+              <a class="nav-link" href="#">
                 <i class="fe fe-message-circle fe-16"></i>
                 <span class="ml-3 item-text">Live Chat</span>
               </a>
             </li>
           </ul>
           <p class="text-muted nav-heading mt-4 mb-1">
-            <span>Documentation</span>
+            <span>Action</span>
           </p>
           <ul class="navbar-nav flex-fill w-100 mb-2">
             <li class="nav-item w-100">
@@ -162,7 +145,7 @@
             </li>
           </ul>
           <div class="btn-box w-100 mt-4 mb-1">
-            <a href="https://themeforest.net/item/tinydash-bootstrap-php-admin-dashboard-template/27511269" target="_blank" class="btn mb-2 btn-primary btn-lg btn-block">
+            <a href="mailto:<?php echo fetchdataall($conn, 'site_data', 'customermail'); ?>" class="btn mb-2 btn-primary btn-lg btn-block">
               <i class="fe fe-mail fe-12 mx-2"></i><span class="small">Message Support</span>
             </a>
           </div>

@@ -1,3 +1,7 @@
+<?php 
+  include '../includes/__function.php';
+  include 'inc/__user.php';
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -18,6 +22,7 @@
     <!-- App CSS -->
     <link rel="stylesheet" href="css/app-light.css" id="lightTheme">
     <link rel="stylesheet" href="css/app-dark.css" id="darkTheme" disabled>
+    <link rel="stylesheet" href="css/card.css">
   </head>
   <body class="vertical light">
     <div class="wrapper">
@@ -34,44 +39,88 @@
 
               <div class="row align-items-center mb-4">
                 <div class="col">
-                  <h2 class="h3 page-title">Bank account *8826</h2>
+                  <h2 class="h3 page-title">Bank account **<?php echo substr(fetchdata($conn, 'clients', 'email', $userid, 'account_number'), 5) ?></h2>
                 </div>
               </div> <!-- .row -->
-
-              <div class="row align-items-center justify-content-between">  
-                <div class="col-md-5 py-5 wow zoomIn">
-                    <div class="img-fluid text-center">
-                      <img src="assets/images/banner_image_2.svg" alt="">
+              <?php 
+                $qry = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `card` WHERE userid = '$userid'"));
+                $datacard = json_encode($qry['card']);
+              ?>
+              <div class="row align-items-center justify-content-betwee">  
+                <div class="col-main1 wow zoomIn">
+                    <div class="img-fluid">
+                      <div class="card-list">
+                         <div class="card-item">
+                            <div class="card-item__side -front">
+                               <div class="card-item__focus" ref="focusElement"></div>
+                               <div class="card-item__cover_wrapper"></div>
+                               <div class="card-item__cover">                                
+                                  <img src="assets/card_skin/1.jpeg" class="card-item__bg" id="card__img">
+                               </div>
+                               <div class="card-item__wrapper">
+                                  <div class="card-item__top">
+                                     <img src="assets/card_skin/chip.png" class="card-item__chip">
+                                     <div class="card-item__type">
+                                        <transition name="slide-fade-up">
+                                           <img src="assets/card_skin/mastercard.png" alt="" class="card-item__typeImg">
+                                        </transition>
+                                     </div>
+                                  </div>
+                                  <label for="cardNumber" class="card-item__number" id="card_user">
+                                  </label>
+                                  <div class="card-item__content">
+                                     <label for="cardName" class="card-item__info" ref="cardName">
+                                        <div class="card-item__holder">Card Holder</div>
+                                        <transition name="slide-fade-up">
+                                           <div class="card-item__name">
+                                              <transition-group name="slide-fade-right">
+                                                 <span class="card-item__nameItem"><?php echo ucwords(fetchdata($conn, 'clients', 'email', $userid, 'firstname'))." ".ucwords(fetchdata($conn, 'clients', 'email', $userid, 'lastname')); ?></span>
+                                              </transition-group>
+                                           </div>
+                                        </transition>
+                                     </label>
+                                     <div class="card-item__date" ref="cardDate">
+                                        <label for="cardMonth" class="card-item__dateTitle mb-0">Expires</label>
+                                        <label for="cardMonth" class="card-item__dateItem">
+                                           <transition name="slide-fade-up">                                              
+                                              <span><?php echo $qry['expiry'] ?></span>
+                                           </transition>
+                                        </label>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                            <div class="card-item__side -back">
+                               <div class="card-item__cover">
+                                  <img  v-bind:src="'https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/' + currentCardBackground + '.jpeg'" class="card-item__bg">
+                               </div>
+                               <div class="card-item__band"></div>
+                               <div class="card-item__cvv">
+                                  <div class="card-item__cvvTitle">CVV</div>
+                                  <div class="card-item__cvvBand">
+                                     <span v-for="(n, $index) in cardCvv" :key="$index">
+                                     *
+                                     </span>
+                                  </div>
+                                  <div class="card-item__type">
+                                     <img v-bind:src="'https://raw.githubusercontent.com/muhammederdem/credit-card-form/master/src/assets/images/' + getCardType + '.png'" v-if="getCardType" class="card-item__typeImg">
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
                     </div>
                   </div>              
-                <div class="col-md-6 py-5 wow fadeInLeft">
-                    <div class="card shadow eq-card mb-4">
-                        <div class="card-body mb-n3">
-                          <div class="row align-items-center h-100">
-                            <div class="col-md-6 my-3">
-                              <p class="mb-0"><strong class="mb-0 text-uppercase text-muted">Balance</strong></p>
-                              <h3>$2,562</h3>
-                              <p class="small text-muted mb-0"><span>Check and manage your account balance</span></p>
-                            </div>
-                            <div class="col-md-6 my-4 text-center">
-                              <div lass="chart-box mx-4">
-                                <div id="radialbarWidget"></div>
-                              </div>
-                            </div>
-                            <div class="col-md-6 border-top py-3">
-                              <p class="mb-1"><strong class="text-muted">Credit</strong></p>
-                              <h4 class="mb-0">$108</h4>
-                              <p class="small text-muted mb-0"><span>37.7% Last week</span></p>
-                            </div> <!-- .col -->
-                            <div class="col-md-6 border-top py-3">
-                              <p class="mb-1"><strong class="text-muted">Debit</strong></p>
-                              <h4 class="mb-0">$1168</h4>
-                              <p class="small text-muted mb-0"><span>-18.9% Last week</span></p>
-                            </div> <!-- .col -->
-                          </div>
-                        </div> <!-- .card-body -->
-                    </div> <!-- .card -->
-                </div>               
+                <div class="col-main2 wow fadeInLeft">
+                  <!-- charts-->
+                  <div class="row my-4">
+                    <div class="col-md-12">
+                      <div class="chart-box">
+                        <div id="columnChart"></div>
+                      </div>
+                    </div> <!-- .col -->
+                  </div> <!-- end section -->
+                </div>                
               </div>
 
               <div class="row">
@@ -85,22 +134,93 @@
                       <table class="table table-hover table-borderless table-striped mt-n3 mb-n1">
                         <thead>
                           <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Company</th>
-                            <th>Date</th>
+                            <th>S/N</th>
+                            <th>TNX ID</th>
+                            <th>Transaction</th>
+                            <th>Amount</th>
+                            <th>TNX Type</th>
+                            <th>Date</th>    
                             <th>Status</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>3224</td>
-                            <th scope="col">Keith Baird</th>
-                            <td>Enim Limited<br /><span class="small text-muted">901-6206 Cras Av.</span></td>
-                            <td>Apr 24, 2019</td>
-                            <td><span class="dot dot-lg bg-warning mr-2"></span></td>
-                          </tr>
-                          <tr>
+                           <?php
+                            $total_data = fetchTnxdata_rev($conn, $userid);
+                            if (!empty($total_data)) {
+                              if (count($total_data) > 10) {$ycount = 10;}
+                              else{$ycount = count($total_data);}
+                              $counter = 1;
+                              for ($x=0; $x < $ycount; $x++) { ?>
+                                <?php $exp_data = explode("--", $total_data[$x]); ?>
+                                <tr>
+                                  <td><?php echo $counter++; ?></td>  
+                                  <td><small><?php echo $exp_data[0]; ?></small></td>  
+                                  <?php 
+                                    if (strtolower($exp_data[1]) == 'credit') {
+                                      $tnx_color = 'success';
+                                    }
+                                    elseif (strtolower($exp_data[1]) == 'debit') {
+                                      $tnx_color = 'danger';
+                                    }
+                                    else{
+                                      $tnx_color = 'secondary';
+                                    }
+                                  ?>     
+                                  <?php 
+                                    $exp_data_account_info = explode(",", $exp_data[3]);   
+                                  ?>                             
+                                  <td><?php echo ucfirst($exp_data[1]); ?><br /><span class="dot dot-md bg-<?php echo $tnx_color; ?> mr-2"></span><span class="small"><?php if (!empty($exp_data_account_info[2])) {echo $exp_data_account_info[2];} else{echo "N/A";} ?></span></td>     
+                                  <td>
+                                    $<?php echo number_format($exp_data[4], 2); ?>                                      
+                                  </td> 
+                                  <td>
+                                    <?php
+                                      if (strtolower($exp_data[2]) == 'local') {
+                                        echo "Local Transfer";
+                                      }
+                                      elseif (strtolower($exp_data[2]) == 'inter') {
+                                        echo "International Transfer";
+                                      }
+                                      else{
+                                        echo "N/A";
+                                      }
+                                    ?>                                      
+                                  </td>                              
+                                  <td>
+                                    <?php 
+                                      $date_exp = explode(" ", $exp_data[6]);
+                                      $time_exp = explode(":", $date_exp[3]);
+                                      echo $date_exp[0]." ".$date_exp[1]." ".$date_exp[2]." ".$time_exp[0].":".$time_exp[1];
+                                    ?>                                      
+                                  </td>
+                                  <?php 
+                                    if (strtolower($exp_data[5]) == 'success') {
+                                      $stat_color = 'success';
+                                      $stat_message = 'Successful';
+                                    }
+                                    elseif (strtolower($exp_data[5]) == 'pending') {
+                                      $stat_color = 'warning';
+                                      $stat_message = 'pending';
+                                    }
+                                    elseif (strtolower($exp_data[5]) == 'failed') {
+                                      $stat_color = 'danger';
+                                      $stat_message = 'Failed';
+                                    }
+                                    else{
+                                      $stat_color = 'secondary';
+                                      $stat_message = $exp_data[5];
+                                    }
+                                  ?>
+                                  <td><span class="dot dot-md bg-<?php echo $stat_color; ?> mr-2"></span> <small class="text-muted"><?php echo ucfirst($stat_message); ?></small></td>
+                                </tr>
+                              <?php }  
+                            }
+                            else{ ?>
+                              <tr>
+                                <td colspan="5">No Data yet</td>
+                              </tr>
+                            <?php }
+                          ?>
                         </tbody>
                       </table>
                     </div> <!-- .card-body -->
@@ -110,130 +230,9 @@
 
             </div>
           </div> <!-- .row -->
-        </div> <!-- .container-fluid -->
-        <div class="modal fade modal-notif modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="defaultModalLabel">Notifications</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="list-group list-group-flush my-n3">
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-box fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Package has uploaded successfull</strong></small>
-                        <div class="my-0 text-muted small">Package is zipped and uploaded</div>
-                        <small class="badge badge-pill badge-light text-muted">1m ago</small>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-download fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Widgets are updated successfull</strong></small>
-                        <div class="my-0 text-muted small">Just create new layout Index, form, table</div>
-                        <small class="badge badge-pill badge-light text-muted">2m ago</small>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-inbox fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Notifications have been sent</strong></small>
-                        <div class="my-0 text-muted small">Fusce dapibus, tellus ac cursus commodo</div>
-                        <small class="badge badge-pill badge-light text-muted">30m ago</small>
-                      </div>
-                    </div> <!-- / .row -->
-                  </div>
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-link fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Link was attached to menu</strong></small>
-                        <div class="my-0 text-muted small">New layout has been attached to the menu</div>
-                        <small class="badge badge-pill badge-light text-muted">1h ago</small>
-                      </div>
-                    </div>
-                  </div> <!-- / .row -->
-                </div> <!-- / .list-group -->
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Clear All</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal fade modal-shortcut modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="defaultModalLabel">Shortcuts</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body px-5">
-                <div class="row align-items-center">
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-success justify-content-center">
-                      <i class="fe fe-cpu fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Control area</p>
-                  </div>
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-activity fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Activity</p>
-                  </div>
-                </div>
-                <div class="row align-items-center">
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-droplet fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Droplet</p>
-                  </div>
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-upload-cloud fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Upload</p>
-                  </div>
-                </div>
-                <div class="row align-items-center">
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-users fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Users</p>
-                  </div>
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-settings fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Settings</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        </div> 
+         <?php include 'layout/notification.php'; ?>
+        <?php include 'inc/__chart.php'; ?>
       </main> <!-- main -->
     </div> <!-- .wrapper -->
     <script src="js/jquery.min.js"></script>
@@ -244,5 +243,7 @@
     <script src="js/apexcharts.min.js"></script>
     <script src="js/apexcharts.custom.js"></script>
     <script src="js/apps.js"></script>
+    <script>var cardnum = <?php echo json_encode($datacard);  ?>;</script>
+    <script src="script/card.js"></script>
   </body>
 </html>

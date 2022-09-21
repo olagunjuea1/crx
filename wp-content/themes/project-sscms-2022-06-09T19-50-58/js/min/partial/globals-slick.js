@@ -1,0 +1,1 @@
+function slickAnimate(n){const e=n.parent().find(".next-arrow"),i=n.parent().find(".prev-arrow");function r(e){n.removeClass("slider--fade-left"),n.removeClass("slider--fade-right"),n.addClass("slider--fade-"+e)}e.click(function(){r("left")}),i.click(function(){r("right")}),n.on("swipe",function(e,n,i){r(i)})}

@@ -8,23 +8,17 @@
         <div class="col-4 text-center mb-3">
           <p class="mb-1 small text-muted">Total Transaction</p>                          
           <span class="h3"><?php echo count($fetchtnx_arry = fetchTnxdata($conn, $userid)); ?></span><br />
-          <span class="small text-muted">+20%</span>
-          <span class="fe fe-arrow-up text-success fe-12"></span>
         </div>
         <div class="col-4 text-center mb-3">
           <p class="mb-1 small text-muted">Highest Debit</p>
           <span class="h3">$<?php print_r(fetch_max($conn, $userid, 'debit')); ?></span><br />
-          <span class="small text-muted">+6%</span>
-          <span class="fe fe-arrow-up text-success fe-12"></span>
         </div>
         <div class="col-4 text-center mb-3">
           <p class="mb-1 small text-muted">Highest Cedit</p>
           <span class="h3">$<?php echo thousandsCurrencyFormatb(fetch_max($conn, $userid, 'credit')); ?></span><br />
-          <span class="small text-muted">-2%</span>
-          <span class="fe fe-arrow-down text-danger fe-12"></span>
         </div>
       </div>
-      <table class="table table-borderless mt-3 mb-1 mx-n1 table-sm">
+      <table class="table table-borderless h6 mt-3 mb-1 mx-n1 table-sm">
         <thead>
           <tr>
             <th class="w-50">Transaction</th>

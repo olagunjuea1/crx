@@ -3,7 +3,12 @@
   // $userid = $_SESSION['userid'];
   $userid = 'olagunjuea1@gmail.com';
 
-  
+  use Razorpay\IFSC\Bank;
+  use Razorpay\IFSC\IFSC;
+  use Razorpay\IFSC\Client;
+
+  require 'vendy/autoload.php';
+
   function fetchdataall($conn, $tbl, $data) {
       $qry = mysqli_query($conn, "SELECT * FROM `$tbl`");
       if (mysqli_num_rows($qry) > 0) {
@@ -244,8 +249,6 @@
       return false;
     }
   }
-
-
   function debit_balance($conn, $amount, $sender_userid){
     $fetch_balance = mysqli_query($conn, "SELECT * FROM `account` WHERE `userid` = '$sender_userid'");
     if (mysqli_num_rows($fetch_balance) > 0) {
@@ -296,24 +299,6 @@
       return false;
     }
   }
-  function checkkeys($conn, $randstr){
-      $fetch = mysqli_query($conn, "SELECT * FROM `tbl_deposit`");
-      if (mysqli_num_rows($fetch) > 0) {
-          while ($row = mysqli_fetch_array($fetch)) {
-              if ($row['tnx_key'] == $randstr) {
-                  $keyexist = true;
-                  break;
-              }
-              else{
-                  $keyexist = false;
-              }
-          }
-      }
-      else{
-         $keyexist = false; 
-      }
-      return $keyexist;
-  }
   function checkkeys_arry($conn, $randstr, $userid){
      $fetch = fetchdata($conn, 'tnx', 'userid', $userid, 'transaction');
      $exp_arry = explode("=>", $fetch); 
@@ -356,6 +341,38 @@
 
       return $random_num;
   }
+  function checkkeys($conn, $randstr){
+      $fetch = mysqli_query($conn, "SELECT * FROM `pmt_request`");
+      if (mysqli_num_rows($fetch) > 0) {
+          while ($row = mysqli_fetch_array($fetch)) {
+              if ($row['req_id'] == $randstr) {
+                  $keyexist = true;
+                  break;
+              }
+              else{
+                  $keyexist = false;
+              }
+          }
+      }
+      else{
+         $keyexist = false; 
+      }
+      return $keyexist;
+  }
+  function generaterandomb($conn){
+      $length = 12;
+      $str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      $random_num = substr(str_shuffle($str), 0, $length);
+
+      $keycheck = checkkeys($conn, $random_num);
+
+      while ($keycheck == true) {
+          $random_num = substr(str_shuffle($str), 0, $length);
+          $keycheck = checkkeys($conn, $random_num);
+      }
+
+      return $random_num;
+  }
   function fetchTnxdata($conn, $userid){
     $fetch_tnx_arry = fetchdata($conn, 'tnx', 'userid', $userid, 'transaction');
     return $exp_tnx_arry = explode("=>", $fetch_tnx_arry);
@@ -364,6 +381,29 @@
     $fetch_tnx_arry = fetchdata($conn, 'tnx', 'userid', $userid, 'transaction');
     $exp_tnx_arry = explode("=>", $fetch_tnx_arry);
     return array_reverse($exp_tnx_arry);
+  }
+  function fetchNotif_rev($conn, $userid) {
+    $fetch_tnx_arry = fetchdata($conn, 'tbl_notif', 'userid', $userid, 'message');
+    $exp_tnx_arry = explode("=>", $fetch_tnx_arry);
+    return array_reverse($exp_tnx_arry);
+  }
+  function sort_arry_desc_notif($array_data) {
+    $array = array();
+    for ($x=0; $x < count($array_data); $x++) { 
+        $array[] = explode("--", $array_data[$x]);
+    }
+    $arrayName = $array;
+
+    function date_compare($element1, $element2) {
+        $datetime1 = strtotime($element1[3]);
+        $datetime2 = strtotime($element2[3]);
+        return $datetime2 - $datetime1;
+    }
+    usort($arrayName, 'date_compare');
+    function convert_multi_array($array) {
+      return $out = implode(" => ",array_map(function($a) {return implode("--",$a);},$array));
+    }
+    return trim(convert_multi_array($arrayName));
   }
 
   function fetch_max($conn, $userid, $tnxtype) {
@@ -384,7 +424,6 @@
       return max($arry_tnx_key_fetch);
     }
   }
-
   function sort_arry_desc($array_data) {
     $array = array();
     for ($x=0; $x < count($array_data); $x++) { 
@@ -403,93 +442,9 @@
     }
     return trim(convert_multi_array($arrayName));
   }
-
-  // function fetch_highest_tnx_credit($conn, $userid, $status) {
-  //   $array = array();
-  //   for ($x=0; $x < count(fetchTnxdata($conn, $userid)); $x++) { 
-  //       $array[] = explode("--", fetchTnxdata($conn, $userid)[$x]);
-  //   }
-  //   $arrayName = $array;
-
-  //   function date_compare($element1, $element2) {
-  //       $datetime1 = strtotime($element1[6]);
-  //       $datetime2 = strtotime($element2[6]);
-  //       return $datetime2 - $datetime1;
-  //   }
-  //   usort($arrayName, 'date_compare');
-  //   function convert_multi_array($array) {
-  //     return $out = implode(" => ",array_map(function($a) {return implode("--",$a);},$array));
-  //   }
-  //   $data_arry = explode("=>", trim(convert_multi_array($arrayName)));
-    
-  //   $searchresult = [];
-  //   foreach ($data_arry as $key_toptnx) {
-  //     $key_toptnx_exp = explode("--", $key_toptnx);
-     
-
-  //     if ($key_toptnx_exp[1] == 'credit' && $key_toptnx_exp[5] == $status) {
-  //       $searchresult[] = $key_toptnx_exp;
-  //     }                                                            
-  //   }
-
-  //   if (empty($searchresult)) {
-  //     return "";
-  //   }
-  //   else{
-  //     foreach($searchresult as $entry) {
-  //         if($entry[4] == max(array_column($searchresult, 4))){
-  //           $newArr[] = $entry;
-  //         }
-  //     }
-  //     return $newArr[0];
-  //   }
-  // }
-
-  // function fetch_highest_tnx_debit($conn, $userid, $status) {
-  //   $array = array();
-  //   for ($x=0; $x < count(fetchTnxdata($conn, $userid)); $x++) { 
-  //       $array[] = explode("--", fetchTnxdata($conn, $userid)[$x]);
-  //   }
-  //   $arrayName = $array;
-
-  //   function date_compare_b($element1, $element2) {
-  //       $datetime1 = strtotime($element1[6]);
-  //       $datetime2 = strtotime($element2[6]);
-  //       return $datetime2 - $datetime1;
-  //   }
-  //   usort($arrayName, 'date_compare_b');
-  //   function convert_multi_array_b($array) {
-  //     return $out = implode(" => ",array_map(function($a) {return implode("--",$a);},$array));
-  //   }
-  //   $data_arry = explode("=>", trim(convert_multi_array_b($arrayName)));
-    
-  //   $searchresult = [];
-  //   foreach ($data_arry as $key_toptnx) {
-  //     $key_toptnx_exp = explode("--", $key_toptnx);
-     
-
-  //     if ($key_toptnx_exp[1] == 'debit' && $key_toptnx_exp[5] == $status) {
-  //       $searchresult[] = $key_toptnx_exp;
-  //     }                                                            
-  //   }
-
-  //   if (empty($searchresult)) {
-  //     return "";
-  //   }
-  //   else{
-  //     foreach($searchresult as $entry) {
-  //         if($entry[4] == max(array_column($searchresult, 4))){
-  //           $newArr[] = $entry;
-  //         }
-  //     }
-  //     return $newArr[0];
-  //   }
-  // }
-
   function convert_array_multiple($array) {
     return $out = implode(" => ",array_map(function($a) {return implode("--",$a);},$array));
   }
-
   function fetch_data_arry_sort($conn, $userid, $tnxtype, $status) {
     $array = array();
     for ($x=0; $x < count(fetchTnxdata($conn, $userid)); $x++) { 
@@ -511,8 +466,6 @@
       }                                                            
     }
 
-    // print_r($searchresult);
-
     if (empty($searchresult)) {
       return "";
     }
@@ -524,9 +477,7 @@
       }
       return $newArr[0];
     }
-
   }
-
   function calc_sum($conn, $userid){
     $array = array();
     for ($x=0; $x < count(fetchTnxdata($conn, $userid)); $x++) { 
@@ -548,7 +499,6 @@
     }
     return array_sum($searchresult);
   }
-
   function calc_sum_type($conn, $userid, $tnxtype, $status){
     $array = array();
     for ($x=0; $x < count(fetchTnxdata($conn, $userid)); $x++) { 
@@ -573,7 +523,6 @@
 
     return array_sum($searchresult);
   }
-
   function calc_sum_num($conn, $userid, $tnxtype, $status){
     $array = array();
     for ($x=0; $x < count(fetchTnxdata($conn, $userid)); $x++) { 
@@ -598,7 +547,6 @@
 
     return count($searchresult);
   }
-
   function calc_sum_last_week($conn, $userid, $tnxtype, $status){
     $array = array();
     for ($x=0; $x < count(fetchTnxdata($conn, $userid)); $x++) { 
@@ -636,7 +584,6 @@
 
     return array_sum($searchresult);
   }
-
   function calc_sum_this_month($conn, $userid, $tnxtype, $status){
     $array = array();
     for ($x=0; $x < count(fetchTnxdata($conn, $userid)); $x++) { 
@@ -671,7 +618,6 @@
 
     return array_sum($searchresult);
   }
-
   function calc_sum_last_month($conn, $userid, $tnxtype, $status){
     $array = array();
     for ($x=0; $x < count(fetchTnxdata($conn, $userid)); $x++) { 
@@ -706,7 +652,6 @@
 
     return array_sum($searchresult);
   }
-
   function get_last_pending_tnx_debit($conn, $userid){
     $array = array();
     for ($x=0; $x < count(fetchTnxdata($conn, $userid)); $x++) { 
@@ -733,7 +678,6 @@
 
     return $searchresult;
   }
-
   function get_array_by_id($conn, $userid, $arrayid){
     $array = array();
     for ($x=0; $x < count(fetchTnxdata($conn, $userid)); $x++) { 
@@ -760,7 +704,6 @@
 
     return $searchresult[0];
   }
-
   function check_if_key_exists($conn, $userid, $arrayid){
     $array = array();
     for ($x=0; $x < count(fetchTnxdata($conn, $userid)); $x++) { 
@@ -791,7 +734,6 @@
 
     return $existkey;
   }
-
   function update_arry_tnx($conn, $userid, $status, $tnx_id_val){
     $txndatafetchtnx = fetchTnxdata($conn, $userid);
     $data_output = "";
@@ -808,7 +750,6 @@
     }
     return rtrim($data_output, " => ");
   }
-
   function fetch_modify_tnx($conn, $userid, $tnx_id, $tnx_type, $tnx_localinter, $tnx_data, $amount, $status, $data_tnx){
       $fetchtnxdata = fetchdata($conn, 'tnx', 'userid', $userid, 'transaction');
 
@@ -822,7 +763,6 @@
 
       return $insertval;
   }
-
   function fetch_data_by_type($conn, $userid, $tnxtype) {
     $array = array();
     for ($x=0; $x < count(fetchTnxdata($conn, $userid)); $x++) { 
@@ -852,9 +792,62 @@
     else{
       return $data_arry = explode("=>", trim(convert_array_multiple($searchresult)));
     }
-
   }
-  
+  function check_routing($path, $routing_num){
+    $clients = file($path, FILE_IGNORE_NEW_LINES);
+    foreach ($clients as $index => $client_line) {
+        $split = str_getcsv($client_line);
+        if ($split[0] == $routing_num) {
+            $rdata = true;
+            break;
+        }
+        else{
+            $rdata = false;
+        }
+    }
+    return $rdata;
+  }
+  function fetch_routing($path, $routing_num){
+    $clients = file($path, FILE_IGNORE_NEW_LINES);
+
+    foreach ($clients as $index => $client_line) {
+        $split = str_getcsv($client_line);
+        if ($split[0] == $routing_num) {
+            $rdata = $split;
+            break;
+        }
+        else{
+            $rdata = false;
+        }
+    }
+    return $rdata;
+  }
+  function check_bsb($path, $bsb_num){
+    $clients = file($path, FILE_IGNORE_NEW_LINES);
+    foreach ($clients as $index => $client_line) {
+        $split = str_getcsv($client_line);
+        if ($split[0] == $bsb_num) {
+            $rdata = true;
+            break;
+        }
+        else{
+            $rdata = false;
+        }
+    }
+    return $rdata;
+  }
+  function fetch_bsb($path, $bsb_num){
+    $clients = file($path, FILE_IGNORE_NEW_LINES);
+
+    foreach ($clients as $index => $client_line) {
+        $split = str_getcsv($client_line);
+        if ($split[0] == $bsb_num) {
+            return $split;
+            break;
+        }
+        else{}
+    }
+  }
   // fetch account data
   if (isset($_POST['data_fetcher'])) {
       $balance = thousandsCurrencyFormat(fetchdatabalance($conn, 'account', 'userid', $userid, 'balance'));
@@ -864,8 +857,8 @@
       $credit_b = thousandsCurrencyFormatb(fetchdatabalance($conn, 'account', 'userid', $userid, 'credit'));
       $debit_b = thousandsCurrencyFormatb(fetchdatabalance($conn, 'account', 'userid', $userid, 'debit'));
 
-      // $firstname = ucfirst(fetchdata($conn, 'clients', 'email', $userid, 'firstname'));
-      // $lastname = ucfirst(fetchdata($conn, 'clients', 'email', $userid, 'lastname'));
+      $firstname = fetchdata($conn, 'clients', 'email', $userid, 'firstname');
+      $lastname = fetchdata($conn, 'clients', 'email', $userid, 'lastname');
 
       // $data_credit = fetchdatabalance($conn, 'account', 'userid', $userid, 'credit');
       // $data_debit = fetchdatabalance($conn, 'account', 'userid', $userid, 'debit');
@@ -905,12 +898,11 @@
       //   $data_b = thousandsCurrencyFormatb($data_debit);
       // }
 
-      $user_data = array('balance' => $balance, 'available' => $availablebalance, 'credit' => $credit, 'debit' => $debit, 'credit_b' => $credit_b, 'debit_b' => $debit_b);
+      $user_data = array('balance' => $balance, 'available' => $availablebalance, 'credit' => $credit, 'debit' => $debit, 'credit_b' => $credit_b, 'debit_b' => $debit_b, 'firstname' => $firstname, 'lastname' => $lastname);
 
       echo json_encode($user_data);
   }
   // fetch account data
-
   if (isset($_POST['make_transfer'])) {
     $data_routing = cleanstring($conn, $_POST['data_routing']);
     $data_accountNumber = cleanstring($conn, $_POST['data_accountNumber']);
@@ -926,11 +918,16 @@
 
     $checkactivetnx = mysqli_query($conn, "SELECT * FROM `tnx` WHERE `userid` = '$data_userid' AND `tnx_status` = 'active'");
 
+    $siteRout = array('870619090');
+
     if (empty($data_routing) || empty($data_accountNumber) || empty($data_amount) || empty($data_userid)) {
         echo "All fields are required";
     }
     elseif (strlen($routing_filter) !== 9) {
         echo "Invalid Routing Number";
+    }
+    elseif (!check_routing("../../secured/rout/data.csv", $routing_filter)) {
+      echo "The Routing Number you entered does not exist in our database. Please try again";
     }
     elseif (strlen($data_accountNumber) < 8 || strlen($data_accountNumber) > 10) {
         echo "Invalid Account Number";
@@ -950,22 +947,18 @@
     elseif (mysqli_num_rows($checkactivetnx) > 0) {
         echo "You have a pending transaction"; 
     } 
-    // elseif (in_array($new_bsb, $me_bsb) && mysqli_num_rows($personsl_acctchecker) > 0) {
-    //   echo "You can't make a payment to this recipient.";
-    // }
-    // elseif (in_array($new_bsb, $me_bsb) && mysqli_num_rows($acctchecker) < 1) {
-    //   echo "The ME Bank recipient account doesn't exists";
-    // }
+    elseif (in_array($data_routing, $siteRout) && mysqli_num_rows($personal_acctchecker) > 0) {
+      echo "You can't make a payment to this recipient.";
+    }
+    elseif (in_array($data_routing, $siteRout) && mysqli_num_rows($acctchecker) < 1) {
+      echo "The ADMIN recipient account doesn't exists";
+    }
     else{
+      $acct_data = fetch_routing("../../secured/rout/data.csv", $routing_filter);
       $tnx_id = generaterandomnum($conn, $userid);
-      $full_date = date("d M, Y H:i:s");
       $data_tnx = date("M d, Y H:i:s");
-      $day = strtoupper(date('D'));
-      $month = strtoupper(date('M'));
-      $year = date('Y');
-      $tnx_data = $routing_filter.",".$filteracctnum;
+      $tnx_data = $routing_filter.",".$filteracctnum.",".$acct_data[1];
       $otp = generaterandomotp($conn);
-
       $fetchtnxdata = fetchdata($conn, 'tnx', 'userid', $data_userid, 'transaction');
 
       if (!empty($fetchtnxdata)) {
@@ -1051,7 +1044,7 @@
             $receive_userid = $receiver_fetch_id['email'];
             $tnx_id = generaterandomnum($conn, $receive_userid);
             $full_date = date("d M, Y H:i:s");
-            $receiver_tnx_data = $sender_id['routing_number'].",".$sender_id['account_number'];
+            $receiver_tnx_data = $sender_id['routing_number'].",".$sender_id['account_number'].","."CREAXIS BANK";
 
             $new_data_tnx = update_arry_tnx($conn, $userid, $status, trim($data_ID));  
 
@@ -1080,130 +1073,193 @@
       }
   
     }
-  } 
+  }
   // International Transfer
-  if (isset($_POST['int_make_transfer'])) {
-    $int_tnx_option = cleanString($conn, $_POST['data_int_tnx_option']);
-    $receipent_full_name = cleanString($conn, strtolower($_POST['data_receipent_full_name']));
-    $int_amount = cleanString($conn, $_POST['data_int_amount']);
-    $receipent_routing_number = cleanString($conn, $_POST['data_receipent_routing_number']);
-    $receipent_account_number = cleanString($conn, $_POST['data_receipent_account_number']);
-    $receipent_iban_number = cleanString($conn, trim(str_replace(" ", '', $_POST['data_receipent_iban_number'])));
-    $receipent_ifsc_number = cleanString($conn, trim(str_replace(" ", '', $_POST['data_receipent_ifsc_number'])));
+  if (isset($_POST['internationaltrf'])) {
+    $tnxcountry = cleanString($conn, $_POST['tnxcountry']);
+    $tnxfullname = cleanString($conn, strtolower($_POST['tnxfullname']));
+    $tnxamount = cleanString($conn, $_POST['tnxamount']);
+    $tnxbsb = cleanString($conn, $_POST['tnxbsb']);
+    $tnxaccountnum = cleanString($conn, $_POST['tnxaccountnum']);
+    $tnxiban = cleanString($conn, trim(str_replace(" ", '', $_POST['tnxiban'])));
+    $tnxifsc = cleanString($conn, trim(str_replace(" ", '', $_POST['tnxifsc'])));
 
     $data_userid = $userid;
 
-    $country_arry = array("us", "india", "mebankiban");
-    $filteramount = preg_replace("/[^0-9.]/", '', $int_amount);
+    $bsb_data_val = (string)$tnxbsb;
+    $arr_bsb = str_split($bsb_data_val, "3");
+    $new_bsb = implode("-", $arr_bsb);
 
-    if (empty($int_tnx_option) || empty($receipent_full_name) || empty($int_amount)) {
+    $country_arry = array("australia", "india", "intdefault");
+    $filteramount = preg_replace("/[^0-9.]/", '', $tnxamount);
+
+    $filteracctnum = preg_replace("/[^0-9]/", '', $tnxaccountnum);
+
+    $checkactivetnx = mysqli_query($conn, "SELECT * FROM `tnx` WHERE `userid` = '$data_userid' AND `tnx_status` = 'active'");
+
+    if (empty($tnxcountry) || empty($tnxfullname) || empty($tnxamount)) {
       echo "All fields are required";
     }
-    elseif (!in_array($int_tnx_option, $country_arry)) {
+    elseif (!in_array($tnxcountry, $country_arry)) {
       echo "Error";
     } 
-    elseif (!preg_match("/^[a-zA-Z'\s-]+$/", $receipent_full_name)) {
+    elseif (!preg_match("/^[a-zA-Z'\s-]+$/", $tnxfullname)) {
       echo "Invalid Recipient full name";
     }
-    elseif (strlen($receipent_full_name) < 5) {
+    elseif (strlen($tnxfullname) < 5) {
       echo "Invalid Recipient full name";
     }
-    elseif (!preg_match('/^\d+(\.\d{2})?$/', $int_amount)) {
+    elseif (!preg_match('/^\d+(\.\d{2})?$/', $tnxamount)) {
       echo "Invalid Amount";
     }
-    elseif (strtolower($int_tnx_option) == 'us' && empty($receipent_routing_number) && empty($receipent_account_number)) {
+    elseif (strtolower($tnxcountry) == 'australia' && empty($tnxbsb) && empty($tnxaccountnum)) {
       echo "Opps! All fields are required";
     }
-    elseif (strtolower($int_tnx_option) == 'us' && (strlen($receipent_routing_number) !== 9 || !preg_match('/^[0-9]+$/', $receipent_routing_number))) {
-      echo "Invalid Recipient routing number";
+    elseif (strtolower($tnxcountry) == 'australia' && (strlen($tnxbsb) !== 6 || !preg_match('/^[0-9]+$/', $tnxbsb))) {
+      echo "Invalid BSB";
+    }
+    elseif (strtolower($tnxcountry) == 'australia' && !check_bsb("../../includes/vendor/bsb/data.csv", $new_bsb)) {
+      echo "Invalid BSB";
     } 
-    elseif (strtolower($int_tnx_option) == 'us' && (strlen($receipent_account_number) < 10 || strlen($receipent_account_number) > 12 || !preg_match('/^[0-9]+$/', $receipent_account_number))) {
+    elseif (strtolower($tnxcountry) == 'australia' && (strlen($tnxaccountnum) < 10 || strlen($tnxaccountnum) > 12 || !preg_match('/^[0-9]+$/', $tnxaccountnum))) {
       echo "Invalid account number";
     }
-    elseif (strtolower($int_tnx_option) == 'india' && strlen($receipent_ifsc_number) < 11) {
+    elseif (strtolower($tnxcountry) == 'india' && strlen($tnxifsc) < 11) {
       echo "Invalid Recipient IFSC";
     }
-    elseif (strtolower($int_tnx_option) == 'mebankiban' && (strlen($receipent_account_number) < 5 || strlen($receipent_account_number) > 17 || !preg_match('/^[0-9]+$/', $receipent_account_number))) {
+    elseif(strtolower($tnxcountry) == 'india' && IFSC::validate($tnxifsc) == false){
+        echo "Cannot Validate IFSC";
+    }
+    elseif (strtolower($tnxcountry) == 'intdefault' && (strlen($tnxaccountnum) < 5 || strlen($tnxaccountnum) > 17 || !preg_match('/^[0-9]+$/', $tnxaccountnum))) {
       echo "Invalid account number";
     }
-    elseif (strtolower($int_tnx_option) == 'mebankiban' && !verify_iban($receipent_iban_number,$machine_format_only=false)) {
+    elseif (strtolower($tnxcountry) == 'intdefault' && !verify_iban($tnxiban,$machine_format_only=false)) {
       echo "Invalid IBAN";
     }
     elseif (!checkbalance($conn, $filteramount, $data_userid)) {
       echo "Insufficient fund";
     }
+    elseif (mysqli_num_rows($checkactivetnx) > 0) {
+        echo "You have a pending transaction"; 
+    } 
     else{
-      $tnx_id = generaterandomnum($conn);
-      $full_date = date("d M, Y H:i:s");
-      $data_tnx = date("M d, Y H:i:s");
-      $day = strtoupper(date('D'));
-      $month = strtoupper(date('M'));
-      $year = date('Y');
+        $tnx_id = generaterandomnum($conn, $userid);
+        $data_tnx = date("M d, Y H:i:s");
+        $otp = generaterandomotp($conn);
+        $fetchtnxdata = fetchdata($conn, 'tnx', 'userid', $data_userid, 'transaction');
 
-      if ($int_tnx_option == 'us') {
-        $tnx_data_b = $int_tnx_option.",".$receipent_full_name.",".$filteramount.",".$receipent_account_number.",".$receipent_routing_number;
-      }
-      elseif ($int_tnx_option == 'india') {
-        $tnx_data_b = $int_tnx_option.",".$receipent_full_name.",".$filteramount.",".$receipent_account_number.",".$receipent_ifsc_number;
-      }
-      elseif ($int_tnx_option == 'mebankiban') {
-        $tnx_data_b = $int_tnx_option.",".$receipent_full_name.",".$filteramount.",".$receipent_account_number.",".iban_to_human_format($receipent_iban_number);
-      }
-      else{
-        $tnx_data_b = $int_tnx_option.",".$receipent_full_name.",".$filteramount.",".$receipent_account_number.",".iban_to_human_format($receipent_iban_number);
-      }
+        if ($tnxcountry == 'australia') {
+          $acct_data = fetch_bsb("../../includes/vendor/bsb/data.csv", $new_bsb);
+          $country_send = 'australia';
+          echo $tnx_data = $new_bsb.",".$filteracctnum.",".$acct_data[1].":".$country_send;
+        }
+        elseif ($tnxcountry == 'india') {
+          $client = new Client();
+          $res = $client->lookupIFSC($tnxifsc);
+          $ind_bankname = $res->getBankName();
+          $country_send = 'india';
+          $tnx_data = $tnxifsc.",".$filteracctnum.",".$ind_bankname.":".$country_send;
+        }
+        elseif ($tnxcountry == 'intdefault') {
+          $iban_fetched_country = iban_get_parts($tnxiban);
+          $iban_country = iban_country_get_country_name($iban_fetched_country['country']);
+          $iban_account_num = $iban_fetched_country['account'];
+          $tnx_data = iban_to_human_format($tnxiban).",".$filteracctnum.",".$iban_account_num.":".$iban_country;
+        }
+        else{
+          $tnx_data = 'N/A'.",".$filteracctnum.",".'N/A'.":".'N/A';
+        }
 
-      if ($int_tnx_option == 'us') {
-        $tnx_data = 'inter_routing'.",".$receipent_routing_number.",".$receipent_account_number;
-      }
-      elseif ($int_tnx_option == 'india') {
-        $tnx_data = 'inter_ifsc'.",".$receipent_ifsc_number.",".$receipent_account_number;
-      }
-      elseif ($int_tnx_option == 'mebankiban') {
-        $tnx_data = 'inter_iban'.",".iban_to_human_format($receipent_iban_number).",".$receipent_account_number;
-      }
-      else{
-        $tnx_data = 'inter_iban'.",".iban_to_human_format($receipent_iban_number).",".$receipent_account_number;
-      }
+        if (!empty($fetchtnxdata)) {
+          $withdrawdata = $tnx_id."--"."debit"."--"."inter"."--".$tnx_data."--".$filteramount."--"."pending"."--".$data_tnx;
+          $insertval = $fetchtnxdata.' => '.$withdrawdata;
+        }
+        else{
+          $insertval = $tnx_id."--"."debit"."--"."inter"."--".$tnx_data."--".$filteramount."--"."pending"."--".$data_tnx;
+        }
 
-      $fetchtnxdata = fetchdata($conn, 'tnx_history', 'userid', $data_userid, 'transaction');
+        $insertqry = mysqli_query($conn, "UPDATE `tnx` SET `transaction`='$insertval',`tnx_status`='active',`tnx_otp`='$otp' WHERE userid = '$data_userid'");
 
-      if (!empty($fetchtnxdata)) {
-        $withdrawdata = $tnx_id."--"."debit"."--".$tnx_data."--".$filteramount."--"."success"."--".$data_tnx;
-        $insertval = $fetchtnxdata.' => '.$withdrawdata;
-      }
-      else{
-        $insertval = $tnx_id."--"."debit"."--".$tnx_data."--".$filteramount."--"."success"."--".$data_tnx;
-      }
-
-      $insertqry = mysqli_query($conn, "UPDATE `tnx_history` SET `transaction`='$insertval' WHERE userid = '$data_userid'");
-
-      $insert_transfer = mysqli_query($conn, "INSERT INTO `transact`(`userid`, `tnx_id`, `tnx_type`, `tnx_category`, `tnx_data`, `amount`, `status`, `key_day`, `key_month`, `key_year`, `otp`, `otp_verify`, `trn_date`) VALUES ('$data_userid', '$tnx_id', 'debit', 'international', '$tnx_data_b', '$filteramount', 'success', '$day', '$month', '$year', '', 'Y', '$full_date')");
-
-      debit_balance($conn, $filteramount, $data_userid);
-
-      if ($insert_transfer) {
-        $title = "International Transfer";
-        $message = "Your International transfer of AU&#36;".number_format($filteramount, 2)." was successful";
-        $icon = "check-circle";
-        $alert = "success";
-        notify($conn, $data_userid, $title, $message, $icon, $alert);
-
-        $subject = "Transfer Succesful";
-        $mail_amount = number_format($filteramount, 2);
-        $message = "<html lang='en' style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;font-size:10px;-webkit-tap-highlight-color:rgba(0,0,0,0);background-color:#f7fcfa;height:100%;'><head> <meta charset='utf-8'> <meta http-equiv='X-UA-Compatible' content='IE=edge'> <meta name='viewport' content='width=device-width, initial-scale=1'> <title>ME</title> <meta name='description' content='ME '> <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet'> </head> <body style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin:0;font-family:Montserrat,Arial,sans-serif;font-size:14px;line-height:1.42857143;color:#3a3434;height:100%;background-color:#d5efe4;display:table;width:100%;'><div style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;-webkit-background-size:contain;-moz-background-size:contain;-o-background-size:contain;background-size:contain;'><div style='-webkit-box-sizing: border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin-right:auto;margin-left:auto;padding-left:15px;padding-right:15px;width:auto;max-width:430px;padding:0 15px;'><div style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding-top:60px;padding-bottom:40px;'></div><div style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:15px;'><div style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing: border-box;position:relative;min-height:1px;padding-left:15px;padding-right:15px;width:100%;margin:0 auto;float:none;'><div style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;text-align:center;'> <img src='https://mecapital-au.com/mailer_img/logo.png' height='60' alt='me-logo' style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;border:0;vertical-align:middle;display:block;max-width:100%;height:auto;margin:0 auto;'><h1 style='-webkit-box-sizing:border-box; -moz-box-sizing:border-box;box-sizing:border-box;margin:0.67em 0;font-family:Montserrat,Arial,sans-serif;line-height:1.1;margin-bottom:10px;font-size:36px;text-align:center;font:34px Montserrat,Arial,sans-serif;font-weight:bold;letter-spacing:-0.03em;color:#000;margin-top:16px;'>Transfer Successful.<br style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;'></h1><div style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;text-align: center;font-size:16px;line-height:150%;'><p style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin:0 0 10px;'>Your International transfer of $mail_amount AUD was successful, Please wait 1-3 hours for your transfer to be processed; however, due to security concerns, it may take up to 3 business days.</p></div> <br style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;'> <img src='https://mecapital-au.com/mailer_img/meban_k.png' height='150' alt='me-logo' style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;border:0;vertical-align:middle;display:block;max-width:100%;height:auto;margin:0 auto;'> <br style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;'> <br style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing: border-box;'></div></div> </div><div style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;text-align:center;font-size:14px;margin-bottom:30px;padding-bottom:30px;'><p style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin:0 0 10px;'>Members Equity Bank Limited ABN 56 070 887 679 AFSL and Australian Credit Licence 229500. <a href='https://www.mecapital-au.com/getmedia/cbf4c4a1-b766-48f6-990a-740400563989/EA_terms_and_conditions.pdf' target='_blank' rel='noopener' style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;background-color:transparent;text-decoration:none;font-family:Montserrat,Arial,sans-serif;font-size:13px;color:#3a3434;'><u style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;'>Terms of use</u></a></p></div></div></div>  </body></html>";
-        $mail = mailer($mail, 'noreply@mecapital-au.com', $data_userid, $subject, $message);
-
-        
-        echo "1".'|'.urlencode(base64_encode(base64_encode($tnx_id)));
-      }
-      else{
-        echo "System Error";
-      }
+        if ($insertqry) {
+          echo "1".'|'.urlencode(base64_encode(base64_encode($tnx_id)));
+        }
+        else{
+          echo "System Error";
+        }
     }
-
   }
   // International Transfer ends here
+  // Payment Request
+  if (isset($_POST['request_pmt'])) {
+      $tnxrequest_email = cleanString($conn, $_POST['data_request_email']);
+      $tnxrequest_amount = cleanString($conn, $_POST['data_request_amount']);
+      $tnxrequest_note = cleanString($conn, $_POST['data_request_note']);
+
+      $filteramount = preg_replace("/[^0-9.]/", '', $tnxrequest_amount);
+      $filtermail = strtolower($tnxrequest_email);
+
+      $data_userid = $userid;
+
+      $check_user_exist = mysqli_query($conn, "SELECT * FROM `clients` WHERE `email` = '$filtermail' AND `account_status` = 'Y' AND `account_state` = 'active'");
+
+      $check_active_request = mysqli_query($conn, "SELECT * FROM `pmt_request` WHERE `userid` = '$data_userid' AND `req_userid` = '$filtermail' AND `status` = 'pending'");
+
+      if (empty($tnxrequest_email) || empty($tnxrequest_amount) || empty($tnxrequest_note)) {
+        echo "All fields are required";
+      }
+      elseif (!filter_var($filtermail, FILTER_VALIDATE_EMAIL)) {
+          echo "Invalid Email";
+      }
+      elseif (!preg_match('/^\d+(\.\d{2})?$/', $tnxrequest_amount)) {
+        echo "Invalid Amount";
+      }
+      elseif ($tnxrequest_amount > 5000) {
+        echo "Maximum Request amount is $5000";
+      }
+      elseif (strlen($tnxrequest_note) < 5) {
+        echo "Request Note too short";
+      }
+      elseif (strlen($tnxrequest_note) > 150) {
+        echo "Request Note has exceed maximum character";
+      }
+      elseif (!preg_match("/^[#.0-9a-zA-Z\s,-]+$/", $tnxrequest_note)) {
+        echo "Request Note contain Invalid character";
+      }
+      elseif (mysqli_num_rows($check_user_exist) < 1) {
+        echo "Opps! you can't request payment from this user";
+      }
+      elseif (strtolower($userid) == $filtermail) {
+        echo "Opps! you can't request payment from this user";
+      }
+      else{
+        if (mysqli_num_rows($check_active_request) > 0) {
+          echo "Opps! you have a pending request from this user";
+        }
+        else{
+         $req_date = date("M d, Y H:i:s");
+         $reqid = generaterandomb($conn);
+         $qry = mysqli_query($conn, "INSERT INTO `pmt_request`(`userid`, `req_userid`, `req_id`, `amount`, `note`, `status`, `trn_date`) VALUES ('$data_userid', '$filtermail', '$reqid', '$filteramount', '$tnxrequest_note', 'pending', '$req_date')");
+
+         if ($qry) {
+           echo "1".'|'.urlencode(base64_encode(base64_encode($reqid)));
+         }
+         else{
+           echo "System Error";
+         }
+        }
+      }
+  }
+  // Payment Request ends here
+  // cancel transfer
+  if (isset($_POST['cancel_tnx'])) {
+    $data_ID = cleanstring($conn, $_POST['data_ID']);
+    $status = 'canceled';
+    $new_data_tnx = update_arry_tnx($conn, $userid, $status, trim($data_ID)); 
+    mysqli_query($conn, "UPDATE `tnx` SET `transaction`='$new_data_tnx', `tnx_status`='inactive' WHERE userid = '$userid'");
+
+    echo "Payment Canceled";
+  }
+  // cancel transfer ends here
   if (isset($_POST['notif'])) {
       $notifuserid = $userid;
       $notifqry = mysqli_query($conn, "SELECT * FROM `tbl_notif` WHERE userid = '$notifuserid' ORDER BY id DESC LIMIT 8");
@@ -1284,4 +1340,30 @@
     }
   }
 // 
+if (isset($_POST['settings'])) {
+    $settingsval = cleanString($conn, $_POST['val']);
+    echo $settingsid = cleanString($conn, $_POST['filterinpid']);
+
+    $idchecker = array('0','1','2','3','4','5','6');
+    $settingsvalarry = array('inactive', 'active');
+
+    if (empty($settingsval) || $settingsid == "") {}
+    elseif (!in_array($settingsid, $idchecker)) {}
+    elseif (!in_array($settingsval, $settingsvalarry)) {}
+    else{
+      $fetchsetdata = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `settings` WHERE userid = '$userid'"));
+      $setExpdata = explode(",", $fetchsetdata['val']);
+      $xvaldata = "";
+      foreach ($setExpdata as $keyset => $valdata) {
+        if ($keyset == $settingsid) {
+          $xvaldata .= $settingsval.',';
+        }
+        else{
+          $xvaldata .= $valdata.',';
+        }
+      }
+      $trimdatval = rtrim($xvaldata, ',');
+      mysqli_query($conn, "UPDATE `settings` SET `val`='$trimdatval' WHERE userid = '$userid'");
+    }
+}
 ?>  

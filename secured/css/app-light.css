@@ -12067,3 +12067,6 @@ a.uppy-Dashboard-poweredBy {
 .pb_fxs{
   font-size: 13px;
 }
+.capitilizey{
+  text-transform: capitalize;
+}

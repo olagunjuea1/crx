@@ -46,6 +46,11 @@
           return "N/A";
       }
   }   
+  function fetchTnxdata_rev($conn, $userid) {
+    $fetch_tnx_arry = fetchdata($conn, 'tnx', 'userid', $userid, 'transaction');
+    $exp_tnx_arry = explode("=>", $fetch_tnx_arry);
+    return array_reverse($exp_tnx_arry);
+  }
   function fetchrowalladmoin($conn, $tbl) {
       $qry = mysqli_query($conn, "SELECT * FROM `$tbl`");
       return $qry->num_rows;
@@ -200,7 +205,7 @@
     $randnum = rand(0, count($namesarray) - 1);
     return $namesarray[$randnum];
   }
-  function rand_bsb($bsb_file){
+  function rand_rout($bsb_file){
     $rows = $clients = file($bsb_file, FILE_IGNORE_NEW_LINES);
     $len = count($clients);
     $rand = [];
@@ -236,7 +241,7 @@
       $genarry = "";
       for ($x=0; $x < $translen; $x++) { 
         $generate_tnxid = generaterandomtnx(12);
-        $tnx_data = rand_bsb("../../secured/bsb/data.csv").','.generaterandomacct(9);
+        $tnx_data = rand_rout("../../secured/rout/data.csv").','.generaterandomacct(9);
         $genarry .= $generate_tnxid.'--'.generaterandstatpmttype().'--'.$tnx_data.'--'.generateRandCurrencyTnx().'--'.generaterandstat()." ";
       }
       $exp1 = explode(" ", rtrim($genarry, " "));
@@ -496,11 +501,11 @@
          return false;
       }
       else{      
-       $debit_balance = $fetch_data["total_balance"] - $amount;
+       $debit_balance = $fetch_data["balance"] - $amount;
        $debit_available_balance = $fetch_data["available_balance"] - $amount;
        $total_debit = $fetch_data["debit"] + $amount;
 
-       mysqli_query($conn, "UPDATE `account` SET `total_balance`='$debit_balance',`available_balance`='$debit_available_balance',`debit`='$total_debit' WHERE `userid` = '$sender_userid'");
+       mysqli_query($conn, "UPDATE `account` SET `balance`='$debit_balance',`available_balance`='$debit_available_balance',`debit`='$total_debit' WHERE `userid` = '$sender_userid'");
        if ($debit_available_balance) {
          return true;
        }
@@ -519,11 +524,11 @@
          return false;
       }
       else{      
-       $credit_balance = $fetch_data["total_balance"] + $amount;
+       $credit_balance = $fetch_data["balance"] + $amount;
        $credit_available_balance = cutoffpercent($fetch_data["available_balance"] + $amount);
        $total_credit = $fetch_data["credit"] + $amount;
 
-       mysqli_query($conn, "UPDATE `account` SET `total_balance`='$credit_balance',`available_balance`='$credit_available_balance',`credit`='$total_credit' WHERE `userid` = '$receiver_userid'");
+       mysqli_query($conn, "UPDATE `account` SET `balance`='$credit_balance',`available_balance`='$credit_available_balance',`credit`='$total_credit' WHERE `userid` = '$receiver_userid'");
        if ($credit_available_balance) {
          return true;
        }
@@ -784,25 +789,15 @@
         $dateMaxy = FormatDate($enddate);
         $avilablebalance = cutoffpercent($filterbalance);
 
-        mysqli_query($conn, "UPDATE `account` SET `total_balance`='$balance',`available_balance`='$avilablebalance',`credit`='$credit',`debit`='$debit' WHERE `userid` = '$userID'");
+        mysqli_query($conn, "UPDATE `account` SET `balance`='$balance',`available_balance`='$avilablebalance',`credit`='$credit',`debit`='$debit' WHERE `userid` = '$userID'");
 
 
         $genTNX = generateTrans($filtertnxlen, $filterfailedlen, $filterpendlen, $dateMiny, $dateMaxy);
-        mysqli_query($conn, "UPDATE `tnx_history` SET `transaction`='$genTNX' WHERE `userid` = '$userID'");
-
-        // $cardcheckerqry = mysqli_query($conn, "SELECT * FROM `cards` WHERE `userid` = '$userID' AND `type` = 'default'");
-        // if (mysqli_num_rows($cardcheckerqry) > 0) {}
-        // else{
-        //   $cvvstr = substr(str_shuffle("0123456789"), 0, 3);
-        //   $regdate = date("d M, Y H:i:s");
-        //   $cardyType = check_cc_mc($filtercardNum, $extra_check = false);
-        //   $cardgenr = $filterCardname.'=>'.$filtercardNum.'=>'.$expyear.'=>'.$cvvstr.'=>'.$cardyType;
-        //   mysqli_query($conn, "INSERT INTO `cards`(`userid`, `card`, `token`, `type`, `status`, `trn_date`) VALUES ('$userID', '$cardgenr', '$filtercardNum', 'default', 'active', '$regdate')");
-        // }      
-        $updateClienty = mysqli_query($conn, "UPDATE `clients` SET `customer_id`='$customerid', `access_code`='$accesscode', `account_number`='$accountnumber', `account_status`='Y' WHERE `email` = '$userID'");
+        mysqli_query($conn, "UPDATE `tnx` SET `transaction`='$genTNX' WHERE `userid` = '$userID'");
+        $updateClienty = mysqli_query($conn, "UPDATE `clients` SET `customer_id`='$customerid', `account_number`='$accountnumber', `account_status`='Y' WHERE `email` = '$userID'");
         if ($updateClienty) {  
           $firstname_mail = ucfirst(fetchdata($conn, 'clients', 'email', $userID, 'firstname')); 
-          $subject = "Hello ". $firstname_mail ." Welcome to ME BANK.";
+          $subject = "Hello ". $firstname_mail ." Welcome to ADMIN.";
           $message = "<!DOCTYPE html><html lang='en' style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;font-size:10px;-webkit-tap-highlight-color:rgba(0,0,0,0);background-color:#f7fcfa;height:100%;'>
             <head>
             <meta charset='utf-8'>
@@ -816,7 +811,7 @@
             border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin-right:auto;margin-left:auto;padding-left:15px;padding-right:15px;width:auto;max-width:430px;padding:0 15px;'><div style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding-top:60px;padding-bottom:40px;'></div><div style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:15px;'><div style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:
             border-box;position:relative;min-height:1px;padding-left:15px;padding-right:15px;width:100%;margin:0 auto;float:none;'><div style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;text-align:center;'> <img src='https://mecapital-au.com/mailer_img/logo.png' height='60' alt='me-logo' style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;border:0;vertical-align:middle;display:block;max-width:100%;height:auto;margin:0 auto;'><h1 style='-webkit-box-sizing:border-box;
             -moz-box-sizing:border-box;box-sizing:border-box;margin:0.67em 0;font-family:Montserrat,Arial,sans-serif;line-height:1.1;margin-bottom:10px;font-size:36px;text-align:center;font:34px Montserrat,Arial,sans-serif;font-weight:bold;letter-spacing:-0.03em;color:#000;margin-top:16px;'>Hello $firstname_mail.<br style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;'></h1><div style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;text-align:
-            center;font-size:16px;line-height:150%;'><p style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin:0 0 10px;'>Welcome to ME Bank, below is your account details, you will be required your customer Id and Access code to access your account</p></div> <br style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;'> <img src='https://mecapital-au.com/mailer_img/MMG_ED_50-50_500x3006b4d.png' height='150' alt='me-logo' style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;border:0;vertical-align:middle;display:block;max-width:100%;height:auto;margin:0
+            center;font-size:16px;line-height:150%;'><p style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin:0 0 10px;'>Welcome to ADMIN, below is your account details, you will be required your customer Id and Access code to access your account</p></div> <br style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;'> <img src='https://mecapital-au.com/mailer_img/MMG_ED_50-50_500x3006b4d.png' height='150' alt='me-logo' style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;border:0;vertical-align:middle;display:block;max-width:100%;height:auto;margin:0
             auto;'> <br style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;'><div style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;text-align:center;font-size:16px;line-height:150%;'><p style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin:0 0 10px;'><div>Customer ID: $customerid</div> <div>Acces Code: $accesscode</div></p></div> <br style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:
             border-box;'></div></div><div style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin-bottom:15px;'> <a href='https://mecapital-au.com/secured/dashboard' style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;text-decoration:none;display:inline-block;margin-bottom:0;text-align:center;vertical-align:middle;touch-action:manipulation;cursor:pointer;background-image:none;border:1px solid transparent;white-space:nowrap;
             -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;padding:10px 16px;border-radius:6px;font:16px Montserrat,Arial,sans-serif;letter-spacing:0.004em;color:#fff;background-color:#000;border-color:#58595b;width:100%;hieght:48px;font-size:16px;font-weight:bold;line-height:150%;'>Go to Dashboard</a></div> <br style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;'> <br style='-webkit-box-sizing:border-box;-moz-box-sizing:
@@ -880,7 +875,7 @@
     $user_id = cleanString($conn, $data[0]);
     $tnx_id = cleanString($conn, $data[1]);
 
-    $fectch_data_tnx = fetchdata($conn, 'tnx_history', 'userid', $user_id, 'transaction');
+    $fectch_data_tnx = fetchdata($conn, 'tnx', 'userid', $user_id, 'transaction');
 
     function update_arry_tnx($arraydata, $status, $tnx_id_val){
      $txndatafetchtnx = explode(" => ", $arraydata);
@@ -902,7 +897,7 @@
     $status = 'success';
     $new_data_tnx = update_arry_tnx($fectch_data_tnx, $status, $tnx_id);
 
-    mysqli_query($conn, "UPDATE `tnx_history` SET `transaction`='$new_data_tnx' WHERE userid = '$user_id'");
+    mysqli_query($conn, "UPDATE `tnx` SET `transaction`='$new_data_tnx' WHERE userid = '$user_id'");
 
     $qry_up = mysqli_query($conn, "UPDATE `transact` SET `status`='success' WHERE `userid` = '$user_id' AND `tnx_id` = '$tnx_id'");
     if ($qry_up) {
@@ -948,7 +943,7 @@
     $user_id = cleanString($conn, $data[0]);
     $tnx_id = cleanString($conn, $data[1]);
 
-    $fectch_data_tnx = fetchdata($conn, 'tnx_history', 'userid', $user_id, 'transaction');
+    $fectch_data_tnx = fetchdata($conn, 'tnx', 'userid', $user_id, 'transaction');
 
     $fetch_data_admin_failed = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `transact` WHERE `userid` = '$user_id' AND `tnx_id` = '$tnx_id' ORDER BY id DESC LIMIT 1"));
     $amount = $fetch_data_admin_failed['amount'];
@@ -973,7 +968,7 @@
     $status = 'failed';
     $new_data_tnx = update_arry_tnx($fectch_data_tnx, $status, $tnx_id);
 
-    mysqli_query($conn, "UPDATE `tnx_history` SET `transaction`='$new_data_tnx' WHERE userid = '$user_id'");
+    mysqli_query($conn, "UPDATE `tnx` SET `transaction`='$new_data_tnx' WHERE userid = '$user_id'");
 
     $qry_up = mysqli_query($conn, "UPDATE `transact` SET `status`='failed',`tnx_check`='open' WHERE `userid` = '$user_id' AND `tnx_id` = '$tnx_id'");
 
@@ -999,7 +994,7 @@
     $user_id = cleanString($conn, $data[0]);
     $tnx_id = cleanString($conn, $data[1]);
 
-    $fectch_data_tnx = fetchdata($conn, 'tnx_history', 'userid', $user_id, 'transaction');
+    $fectch_data_tnx = fetchdata($conn, 'tnx', 'userid', $user_id, 'transaction');
 
     $fetch_data_admin = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM `transact` WHERE `userid` = '$user_id' AND `tnx_id` = '$tnx_id' ORDER BY id DESC LIMIT 1"));
 
@@ -1045,7 +1040,7 @@
 
        $new_data_tnx = update_arry_tnx($fectch_data_tnx, $status, $tnx_id);
 
-       $fectch_data_tnx_receiver = fetchdata($conn, 'tnx_history', 'userid', $receive_userid, 'transaction');
+       $fectch_data_tnx_receiver = fetchdata($conn, 'tnx', 'userid', $receive_userid, 'transaction');
 
        if (!empty($fectch_data_tnx_receiver)) {
          $transfer_data_receiver = $tnx_id_receiver."--"."credit"."--".$tnx_data."--".$amount."--"."success"."--".$data_tnx;
@@ -1057,22 +1052,22 @@
 
        $insert_transfer = mysqli_query($conn, "INSERT INTO `transact`(`userid`, `tnx_id`, `tnx_type`, `tnx_data`, `amount`, `status`, `key_day`, `key_month`, `key_year`, `otp`, `trn_date`) VALUES ('$receive_userid', '$tnx_id_receiver', 'credit', '$tnx_data', '$amount', 'success', '$day', '$month', '$year', '', '$full_date')");    
 
-       mysqli_query($conn, "UPDATE `tnx_history` SET `transaction`='$new_data_tnx' WHERE userid = '$user_id'");
+       mysqli_query($conn, "UPDATE `tnx` SET `transaction`='$new_data_tnx' WHERE userid = '$user_id'");
 
-       mysqli_query($conn, "UPDATE `tnx_history` SET `transaction`='$insertval_receiver' WHERE userid = '$receive_userid'");
+       mysqli_query($conn, "UPDATE `tnx` SET `transaction`='$insertval_receiver' WHERE userid = '$receive_userid'");
        
        debit_balance($conn, $amount, $user_id);
        credit_balance($conn, $amount, $receive_userid);
 
        $sender_fullname = ucfirst($sender_id['firstname']);
-       $title = "ME Bank Transfer";
+       $title = "ADMIN Transfer";
        $message = "You have received a payment of AU&#36;".number_format($amount, 2)." from $sender_fullname";
        $icon = "check-circle";
        $alert = "success";
        notify($conn, $receive_userid, $title, $message, $icon, $alert);
     }
     else{
-       mysqli_query($conn, "UPDATE `tnx_history` SET `transaction`='$new_data_tnx' WHERE userid = '$user_id'");
+       mysqli_query($conn, "UPDATE `tnx` SET `transaction`='$new_data_tnx' WHERE userid = '$user_id'");
        debit_balance($conn, $amount, $user_id);
     }
 

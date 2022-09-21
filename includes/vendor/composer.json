@@ -1,0 +1,6 @@
+{
+    "require": {
+        "php-http/curl-client": "^2.2",
+        "razorpay/ifsc": "^2.0"
+    }
+}

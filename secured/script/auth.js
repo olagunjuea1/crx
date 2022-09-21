@@ -111,6 +111,28 @@ $(document).ready(function () {
   });
 
 
-  
-
+  $("#cancel_transfer").click(function (e) {
+    var data_ID = $("#tnx_crID").val();
+    e.preventDefault();
+   
+    $.ajax({
+      url: "../inc/__function.php",
+      method: "POST",
+      // beforeSend: function () {
+      //   $(".py_loader").show();
+      // },
+      // complete: function () {
+      //   $(".py_loader").hide();
+      // },
+      data: {data_ID, "cancel_tnx":"cancel_tnx"}, 
+      success: function(e){ 
+       $(".bk_alert").show().delay(7000).hide("slow"); 
+       $(".bk_alert").addClass("bg-danger");
+       $("#err_msg").html(e);
+       setTimeout(function () {
+          window.location.href = "../index.php";
+       }, 1000);
+      }
+    });
+  });
 })

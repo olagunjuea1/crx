@@ -58,17 +58,29 @@
                 </g>
               </svg>
             </a>
-            <h2 class="my-3">Verify your transfer of $<?php echo number_format($get_data[4], 2) ?></h2>
+            <?php 
+              $last_pend_tnx = get_array_by_id($conn, $userid, trim($decode_url));
+              if ($last_pend_tnx[2] == 'local') {
+                $txn_type_key = "Local";
+              }
+              elseif ($last_pend_tnx[2] == 'inter') {
+                $txn_type_key = "International";
+              }
+              else{
+                $txn_type_key = "";
+              }
+            ?>
+            <h2 class="my-3">Verify your <?php echo $txn_type_key; ?> transfer of $<?php echo number_format($get_data[4], 2) ?></h2>
           </div>
           <p class="text-muted">Enter OTP (One Time Password)</p>
           <p class="text-muted">Your One Time Password has been send to your email. Please enter the code below to verify your payment</p>
           <div class="form-group">
             <label for="data_otp" class="sr-only">Email address</label>
-            <input type="text" id="data_otp" class="form-control form-control-lg" placeholder="OTP(One Time Password)" required="" autofocus="">
+            <input type="text" id="data_otp" class="form-control form-control-lg" placeholder="OTP(One Time Password)" autofocus="">
           </div>
           <input type="hidden" id="tnx_crID" value="<?php echo $get_data[0]; ?>">
           <button class="btn btn-lg btn-secondary btn-block" type="submit" id="validate_otp_btn">Validate OTP</button>
-          <button class="btn btn-lg btn-danger btn-block" type="submit" id="">Cancel Transfer</button>
+          <button class="btn btn-lg btn-danger btn-block" type="submit" id="cancel_transfer">Cancel Transfer</button>
           <!-- <p class="mt-5 mb-3 text-muted">© 2020</p> -->
         </form>
       </div>

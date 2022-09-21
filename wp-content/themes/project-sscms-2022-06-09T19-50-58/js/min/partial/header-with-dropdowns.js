@@ -1,0 +1,1 @@
+const dropdownItems=document.querySelectorAll(".header-dropdown__item"),dropdownItemsActiveClass="header-dropdown__item--active";function toggleDropdown(){this.classList.toggle(dropdownItemsActiveClass)}for(let e=0;e<dropdownItems.length;e++)dropdownItems[e].addEventListener("click",toggleDropdown);

@@ -1,3 +1,7 @@
+<?php 
+  include '../includes/__function.php';
+  include 'inc/__user.php';
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -31,6 +35,13 @@
               <!-- header -->
               <?php include"layout/header.php"; ?>
               <!-- header ends here -->
+              <div class="alert bg-warning text-white alert-dismissible fade show mt-2 bk_alert hidden">  
+                 <span id="trf_msg"></span>             
+                <button type="button" class="close" aria-label="Close">
+                  <span aria-hidden="true" id="closeErr"><i class="fe fe-x fe-16"></i></span>
+                </button>
+              </div> 
+
               <div class="row align-items-center mb-4">
                 <div class="col">
                   <h2 class="h5 page-title">Request</h2>
@@ -51,18 +62,20 @@
                       <div class="card-body">
                         <form>
                           <div class="form-group">
-                            <label for="inputEmail4">Email</label>
-                            <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                            <label for="request_email">Email</label>
+                            <input type="email" class="form-control forminput" id="request_email" placeholder="Email">
+                            <div id="request_email_msg" class="mt-1 pb_fxs"></div>
                           </div>
                           <div class="form-group">
-                            <label for="inputPassword4">Amount</label>
-                            <input type="text" class="form-control" id="inputPassword4" placeholder="Amount">
+                            <label for="request_amount">Amount</label>
+                            <input type="text" class="form-control forminput" id="request_amount" placeholder="Amount">
                           </div>
                           <div class="form-group">
-                            <label for="inputAddress">Note</label>
-                            <textarea name="" id="" class="form-control"></textarea>
+                            <label for="request_note">Note</label>
+                            <textarea id="request_note" class="form-control forminput"></textarea>
+                            <div id="request_note_msg" class="mt-1 pb_fxs"></div>
                           </div>
-                          <button type="submit" class="btn btn-primary">Request Payment</button>
+                          <button type="submit" class="btn btn-primary" id="request_btn">Request Payment</button>
                         </form>
                       </div>
                     </div>
@@ -76,58 +89,75 @@
                   <div class="card shadow eq-card">
                     <div class="card-header">
                       <strong class="card-title">Request History</strong>
-                      <a class="float-right small text-muted" href="#!">View all</a>
                     </div>
                     <div class="card-body">
-                      <table class="table table-hover table-borderless table-striped mt-n3 mb-n1">
+                      <table class="table table-hover table-borderless table-striped mt-n3 mb-n1" id="reqdata">
                         <thead>
                           <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Company</th>
-                            <th>Date</th>
+                            <th>S/N</th>
+                            <th>Request Type</th>
+                            <th>Requested from</th>
+                            <th>Request ID</th>
+                            <th>Amount</th>
                             <th>Status</th>
+                            <th>Date</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>3224</td>
-                            <th scope="col">Keith Baird</th>
-                            <td>Enim Limited<br /><span class="small text-muted">901-6206 Cras Av.</span></td>
-                            <td>Apr 24, 2019</td>
-                            <td><span class="dot dot-lg bg-warning mr-2"></span></td>
-                          </tr>
-                          <tr>
-                            <td>3218</td>
-                            <th scope="col">Graham Price</th>
-                            <td>Nunc Lectus Incorporated<br /><span class="small text-muted">Ap #705-5389 Id St.</span></td>
-                            <td>May 23, 2020</td>
-                            <td><span class="dot dot-lg bg-success mr-2"></span></td>
-                          </tr>
-                          <tr>
-                            <td>2651</td>
-                            <th scope="col">Reuben Orr</th>
-                            <td>Nisi Aenean Eget Limited<br />
-                              <span class="small text-muted">7425 Malesuada Rd.</span></td>
-                            <td>Nov 4, 2019</td>
-                            <td><span class="dot dot-lg bg-warning mr-2"></span></td>
-                          </tr>
-                          <tr>
-                            <td>2636</td>
-                            <th scope="col">Akeem Holder</th>
-                            <td>Pellentesque Associates<br />
-                              <span class="small text-muted">896 Sodales St.</span></td>
-                            <td>Mar 27, 2020</td>
-                            <td><span class="dot dot-lg bg-danger mr-2"></span></td>
-                          </tr>
-                          <tr>
-                            <td>2757</td>
-                            <th scope="col">Beau Barrera</th>
-                            <td>Augue Incorporated<br />
-                              <span class="small text-muted">4583 Id St.</span></td>
-                            <td>Jan 13, 2020</td>
-                            <td><span class="dot dot-lg bg-success mr-2"></span></td>
-                          </tr>
+                          <?php 
+                            $qry_fetch = mysqli_query($conn, "SELECT * FROM `pmt_request` WHERE `userid` = '$userid' OR `req_userid` = '$userid' oRDER BY `id` DESC");
+                          ?>
+                          <?php 
+                            $countnum = 1;
+                            while ($fetchrowpmt = mysqli_fetch_array($qry_fetch)) { ?>
+                              <tr>
+                                <td><?php echo $countnum++; ?></td>
+                                <?php 
+                                  if ($fetchrowpmt['userid'] == $userid) {
+                                    $requestType = "Sent Request";
+                                    $requestedfrm = $fetchrowpmt['req_userid'];
+                                  }
+                                  elseif ($fetchrowpmt['req_userid'] == $userid) {
+                                     $requestType = "Received Request";
+                                     $requestedfrm = $fetchrowpmt['userid'];
+                                  }
+                                  else{
+                                    $requestType = "N/A";
+                                    $requestedfrm = "N/A";
+                                  }
+                                ?>
+                                <th scope="col"><?php echo $requestType; ?></th>
+                                <td><?php echo $requestedfrm; ?></td>
+                                <td><span class="small text-muted"><?php echo $fetchrowpmt['req_id']; ?></span></td>
+                                <td><?php echo number_format($fetchrowpmt['amount'], 2); ?></td> 
+                                <?php 
+                                  if (strtolower($fetchrowpmt['status']) == 'accept') {
+                                    $stat_color = 'success';
+                                    $stat_message = 'Accepted';
+                                  }
+                                  elseif (strtolower($fetchrowpmt['status']) == 'pending') {
+                                    $stat_color = 'warning';
+                                    $stat_message = 'pending';
+                                  }
+                                  elseif (strtolower($fetchrowpmt['status']) == 'reject') {
+                                    $stat_color = 'danger';
+                                    $stat_message = 'Rejected';
+                                  }
+                                  else{
+                                    $stat_color = 'secondary';
+                                    $stat_message = "N/A";
+                                  }
+                                ?>   
+                                <td><span class="dot dot-md bg-<?php echo $stat_color; ?> mr-2"></span> <?php echo ucfirst($stat_message); ?></td><td>
+                                  <?php 
+                                    $date_exp = explode(" ", $fetchrowpmt['trn_date']);
+                                    $time_exp = explode(":", $date_exp[3]);
+                                    echo $date_exp[0]." ".$date_exp[1]." ".$date_exp[2]." ".$time_exp[0].":".$time_exp[1];
+                                  ?> 
+                                </td>
+                              </tr>
+                            <?php }
+                          ?>
                         </tbody>
                       </table>
                     </div> <!-- .card-body -->
@@ -138,129 +168,7 @@
             </div>
           </div> <!-- .row -->
         </div> <!-- .container-fluid -->
-        <div class="modal fade modal-notif modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="defaultModalLabel">Notifications</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="list-group list-group-flush my-n3">
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-box fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Package has uploaded successfull</strong></small>
-                        <div class="my-0 text-muted small">Package is zipped and uploaded</div>
-                        <small class="badge badge-pill badge-light text-muted">1m ago</small>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-download fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Widgets are updated successfull</strong></small>
-                        <div class="my-0 text-muted small">Just create new layout Index, form, table</div>
-                        <small class="badge badge-pill badge-light text-muted">2m ago</small>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-inbox fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Notifications have been sent</strong></small>
-                        <div class="my-0 text-muted small">Fusce dapibus, tellus ac cursus commodo</div>
-                        <small class="badge badge-pill badge-light text-muted">30m ago</small>
-                      </div>
-                    </div> <!-- / .row -->
-                  </div>
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-link fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Link was attached to menu</strong></small>
-                        <div class="my-0 text-muted small">New layout has been attached to the menu</div>
-                        <small class="badge badge-pill badge-light text-muted">1h ago</small>
-                      </div>
-                    </div>
-                  </div> <!-- / .row -->
-                </div> <!-- / .list-group -->
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Clear All</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal fade modal-shortcut modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="defaultModalLabel">Shortcuts</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body px-5">
-                <div class="row align-items-center">
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-success justify-content-center">
-                      <i class="fe fe-cpu fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Control area</p>
-                  </div>
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-activity fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Activity</p>
-                  </div>
-                </div>
-                <div class="row align-items-center">
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-droplet fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Droplet</p>
-                  </div>
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-upload-cloud fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Upload</p>
-                  </div>
-                </div>
-                <div class="row align-items-center">
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-users fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Users</p>
-                  </div>
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-settings fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Settings</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <?php include 'layout/notification.php'; ?>
       </main> <!-- main -->
     </div> <!-- .wrapper -->
     <script src="js/jquery.min.js"></script>
@@ -271,5 +179,13 @@
     <script src="js/apexcharts.min.js"></script>
     <script src="js/apexcharts.custom.js"></script>
     <script src="js/apps.js"></script>
+    <script src="script/request.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#reqdata').DataTable();
+        });
+    </script>
   </body>
 </html>

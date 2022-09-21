@@ -8,7 +8,7 @@
       <?php 
         $fetchtnx_arry = fetchTnxdata_rev($conn, $userid);
         if (!empty($fetchtnx_arry)) {
-          if (count($fetchtnx_arry) > 5) {$ycount = 5;}
+          if (count($fetchtnx_arry) > 4) {$ycount = 4;}
           else{$ycount = count($fetchtnx_arry);}
           $counter = 1;
           for ($x=0; $x < $ycount; $x++) { ?>
@@ -16,7 +16,7 @@
             <div class="list-group list-group-flush my-n3">
               <div class="list-group-item">
                 <div class="row align-items-center">
-                  <div class="col-3 col-md-2">
+                  <div class="col-2 col-md-2">
                     <img src="./assets/products/p1.jpg" alt="..." class="thumbnail-sm">
                   </div>
                   <div class="col">

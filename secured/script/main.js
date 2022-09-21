@@ -13,6 +13,8 @@ setInterval(() => {
       $('.ex_debit').html(obj.debit); 
       $('.ex_credit_b').html(obj.credit_b);          
       $('.ex_debit_b').html(obj.debit_b);                 
+      $('.ex_firstname').html(obj.firstname);                 
+      $('.ex_lastname').html(obj.lastname);                 
     }
   });
   
